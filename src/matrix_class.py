@@ -33,17 +33,40 @@ class ProteinMatrix:
 
         self.proteins_in_matrix = np.unique(np.append(self.protein_matrix_df["gene_1"], self.protein_matrix_df["gene_2"]))
 
+        self._init_dict_of_proteins_and_indexes()
+        
         #print(self.protein_matrix_df)
     
     
 
-    def __repr__(self): 
-        # return(self.protein_matrix_df.head(10).to_string())
+    def __repr__(self, matrix=False, dict=False): 
+        if (not matrix) and (not dict) :
+            return "specify <matrix=True> and/or <dict=true> to print an instance of the ProteinMatrix class"
+        
+        if (matrix):
+            with pd.option_context('display.max_rows', 10,
+                        'display.max_columns', 10,
+                        'display.precision', 5):
+                print(self.protein_matrix_df)
+        if (dict):
+            print(self.protein_indexes)
+        
+        return ""
 
-        with pd.option_context('display.max_rows', 10,
-                       'display.max_columns', 10,
-                       'display.precision', 5):
-            print(self.protein_matrix_df)
-            return "" # todo: self.protein_matrix_df.to_string() does not 
-                      #       return the simplified table
-            
+
+
+
+    """             _init_dict_of_proteins_and_indexes(self)
+        Parameters: none
+        Purpose:    a helper function to populate a the protein's index 
+                    dictionary 
+        Returns:    n/a
+    """
+    def _init_dict_of_proteins_and_indexes(self):
+
+        index = 0
+        for protein in self.proteins_in_matrix:
+            self.protein_indexes[protein] = index
+            index += 1
+        
+        
