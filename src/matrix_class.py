@@ -39,17 +39,11 @@ class ProteinMatrix:
     
     
 
-    def __repr__(self, matrix=False, dict=False): 
-        if (not matrix) and (not dict) :
-            return "specify <matrix=True> and/or <dict=true> to print an instance of the ProteinMatrix class"
-        
-        if (matrix):
-            with pd.option_context('display.max_rows', 10,
+    def __repr__(self, **kwargs): 
+        with pd.option_context('display.max_rows', 10,
                         'display.max_columns', 10,
                         'display.precision', 5):
                 print(self.protein_matrix_df)
-        if (dict):
-            print(self.protein_indexes)
         
         return ""
 

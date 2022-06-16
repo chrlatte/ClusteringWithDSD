@@ -10,6 +10,14 @@ Purpose: a main to test the matrix_class
 
 from matrix_class import *
 
-obj = ProteinMatrix("../data/testing_data/tiny_dream3.txt")
+def main():
 
-print(obj)
+    matrix = ProteinMatrix("../data/testing_data/tiny_dream3.txt")
+
+    print(matrix)
+
+
+
+
+if __name__ == "__main__":
+    main()
