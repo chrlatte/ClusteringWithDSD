@@ -17,8 +17,10 @@ class ProteinMatrix:
     member variables:
     """
 
-    protein_indexes = dict()
     protein_matrix_df = pd.DataFrame
+    proteins_in_matrix = np.array
+    protein_indexes = dict()
+
 
 
     def __init__(self, csv_filename):
@@ -29,15 +31,19 @@ class ProteinMatrix:
 
         self.protein_matrix_df = pd.read_csv(csv_filename, delimiter = '\s+', names = ["gene_1", "gene_2", "edge_weight"]) 
 
+        self.proteins_in_matrix = np.unique(np.append(self.protein_matrix_df["gene_1"], self.protein_matrix_df["gene_2"]))
+
         #print(self.protein_matrix_df)
     
     
 
-    def __str__(self): 
-        return "From str method of Test: a is % s, " \ 
-              "b is % s" % (self.a, self.b) 
+    def __repr__(self): 
+        # return(self.protein_matrix_df.head(10).to_string())
 
-    def print(*args, **kwargs):
-        __builtin__.print('New print function')
-        return __builtin__.print(*args, **kwargs)
-    
+        with pd.option_context('display.max_rows', 10,
+                       'display.max_columns', 10,
+                       'display.precision', 5):
+            print(self.protein_matrix_df)
+            return "" # todo: self.protein_matrix_df.to_string() does not 
+                      #       return the simplified table
+            
