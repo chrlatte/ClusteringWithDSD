@@ -14,8 +14,9 @@ def main():
 
     matrix = ProteinMatrix("../data/testing_data/tiny_dream3.txt")
 
-    print(matrix.get_matrix)
-
+    print(matrix.get_index())
+    list = ["PRKCA", "GPSM2", "APROTEIN", "OTHERPROTEIN"]
+    submatrix = SubMatrix(list, matrix)
 
 
 
