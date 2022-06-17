@@ -17,16 +17,32 @@ class ProteinMatrix:
     """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 
     def __init__(self, csv_filename: str, **kwargs):
-
-        self.protein_data_df = pd.read_csv(csv_filename, delimiter = '\s+', names = ["gene_1", "gene_2", "edge_weight"]) 
-
-        self.list_of_all_proteins_in_matrix = np.unique(np.append(self.protein_data_df["gene_1"], self.protein_data_df["gene_2"]))
-        self._init_dict_of_proteins_and_indexes()
-
-        self._init_matrix()
+        """             
+        Purpose:    to populate a matrix with data from a CSV file
+        Returns:    n/a
+        """
+        try:
+            # read csv file into a dataframe
+            self.protein_data_df = pd.read_csv(csv_filename, delimiter = '\s+', 
+                names = ["gene_1", "gene_2", "edge_weight"]) 
+            # store names of all proteins
+            self.list_of_all_proteins_in_matrix = np.unique(np.append(self.
+                protein_data_df["gene_1"], self.protein_data_df["gene_2"]))
+            # populate the dictionary relating protein names to their indexes
+            self._init_dict_of_proteins_and_indexes()
+            # populate the matrix with protein interactions
+            self._init_matrix()
+        
+        except FileNotFoundError:
+            print(f"ERROR! file: {csv_filename} not found. ProteinMatrix could not be initialized")
 
 
     def __repr__(self): 
+        """             
+        Purpose:    to override the print function for this class so only a 
+                    portion of the matrix is shown
+        Returns:    an empty string. all printing is done in the function
+        """
         with pd.option_context('display.max_rows', 10,
                         'display.max_columns', 10,
                         'display.precision', 5):
@@ -48,9 +64,9 @@ class ProteinMatrix:
 
     def _init_matrix(self):
         """             
-            Purpose:    a helper function to populate the matrix with 
-                        interactions from a csv file
-            Returns:    n/a
+        Purpose:    a helper function to populate the matrix with interactions
+                    from a csv file
+        Returns:    n/a
         """
         self.protein_matrix = pd.DataFrame(
             columns=self.list_of_all_proteins_in_matrix, 
@@ -58,7 +74,8 @@ class ProteinMatrix:
         
         self.protein_matrix.fillna(0, inplace=True)
         
-        # take each pair of proteins, find their indexes, and then populate the matrix with their interaction
+        # take each pair of proteins, find their indexes, and then populate the 
+        # matrix with their interaction
         for n in range(len(self.protein_data_df)): 
             index1 = self.protein_indexes[self.protein_data_df.iloc[n, 0]]
             index2 = self.protein_indexes[self.protein_data_df.iloc[n, 1]]
@@ -73,25 +90,56 @@ class ProteinMatrix:
     * * * * * * * * * * * * * * * GETTERS * * * * * * * * * * * * * * * * *  
     """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
     def get_matrix(self) -> pd.DataFrame:
+        """             
+        Purpose:    allows for access to a 2D matrix of protein interactions
+        Returns:    a dataframe of protein interactions
+        """
         return self.protein_data_df
     
     def get_index(self,  protein : str or None = None) -> dict() or int:
+        """             
+        Purpose:    to allow access to the protein->index dictionary
+        Returns:    either the index for a specific protein or a dictionary of 
+                    protein names and their indexes
+        """
         if (protein == None):
             return self.protein_indexes
 
         return self.protein_indexes[protein]
     
     def get_protein(self, index : int or None = None) -> np.array or str:
+        """             
+        Purpose:    to access the names of proteins in the matrix
+        Returns:    either the name of a protein at a specific index, or the 
+                    array of all proteins.
+        """
         if (index == None):
             return self.list_of_all_proteins_in_matrix
         
         return self.list_of_all_proteins_in_matrix[index]
         
     def get_interaction(self, index1: int, index2: int):
+        """             
+        Purpose:    to access the interaction values stored in the matrix
+        Returns:    the value at the specified indexes
+        """
         return self.protein_matrix.iloc[index1, index2]
 
 
 
+
+
+
+
+
+
+
+
+
+
+
+# todo: descriptions of the two classes and their functions
+# todo: test the getters for submatrix
 
 
 
@@ -108,24 +156,17 @@ class SubMatrix:
     * * * * * * * * * * * * * * INITIALIZERS * * * * * * * * * * * * * * *  
     """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
     def __init__(self, proteins_to_map : np.array, original_matrix : ProteinMatrix):
-        print(f"instance of submatrix class")
-        # note: not all proteins in list of proteins could be in ProteinMatrix. if so, (their index isnt found in the matrix dictionary),catch the error and put the protein in the table but with only zeros. 
-
-        original_index_dict = original_matrix.get_index()
-        # original_protein_list = original_matrix.get_protein()
-
+        """             
+        Purpose:    to populate the submatrix with data from the original 
+                    matrix. 
+        Returns:    n/a
+        """
+        # initialize list of proteins:
         self.list_of_all_proteins_in_matrix = np.unique(proteins_to_map)
-        
-        print(self.list_of_all_proteins_in_matrix)
-
-
-        self._init_dict_of_proteins_and_indexes(original_index_dict)
-
+        # inititalize new dictionary for the proteins in this submatrix:
+        self._init_dict_of_proteins_and_indexes(original_matrix.get_index())
+        # inititalize matrix:
         self._init_matrix(original_matrix)
-
-
-        
-
     
 
     def _init_dict_of_proteins_and_indexes(self, original_index_dict):
@@ -140,55 +181,78 @@ class SubMatrix:
             self.protein_indexes[protein] = new_index
             new_index += 1
         
-        print(f"new dict init: {self.protein_indexes}")
-
 
     def _init_matrix(self, original_matrix: ProteinMatrix):
         """             
-            Purpose:    a helper function to populate the new matrix with 
+        Purpose:    a helper function to populate the new matrix with 
                         interactions from the original matrix
-            Returns:    n/a
+        Returns:    n/a
         """
         self.protein_matrix = pd.DataFrame(
             columns=self.list_of_all_proteins_in_matrix, 
             index=self.list_of_all_proteins_in_matrix)
-        
         self.protein_matrix.fillna(0, inplace=True)
         
-        print(original_matrix)
-        #print(original_matrix.get_interaction("GPSM2", "PRKCA"))
-
         for i in range(np.size(self.list_of_all_proteins_in_matrix)):
             protein1 : str = self.list_of_all_proteins_in_matrix[i]
-            # print(f"i={i}. protein={protein1}")
 
             try: # find protein 1 in original matrix:
                 index1 = original_matrix.get_index(protein1)
-
-                # fill in all of protein 1's interactions with other proteins in the submatrix
+                # fill in all of protein 1's interactions with other proteins in the submatrix:
                 for j in range (i + 1, np.size(self.list_of_all_proteins_in_matrix)):
                     protein2 : str = self.list_of_all_proteins_in_matrix[j]
 
                     try: # find protein 2 in original matrix:
                         index2 = original_matrix.get_index(protein2)
-
+                        # get the interaction between p1 and p2 from original matrix
                         interaction = original_matrix.get_interaction(index1, index2)
-                        print(f"SUCCESSSSSSSSS: interaction btw {protein1} and {protein2} is {interaction}")
-
+                        # populate submatrix
                         self.protein_matrix.iloc[i, j] = interaction
                         self.protein_matrix.iloc[j, i] = interaction
 
                     except KeyError: # protein2 not in original matrix
                         pass
-                        # print(f"key error: {protein2} not in original matrix")
-
             except KeyError: # protein1 not in original matrix
                 pass 
-                # print(f"key error: {protein1} not in original matrix")
-            
-            
-        print(self.protein_matrix)
 
+    """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+    * * * * * * * * * * * * * * * GETTERS * * * * * * * * * * * * * * * * *  
+    """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+    def get_matrix(self) -> pd.DataFrame:
+        """             
+        Purpose:    allows for access to a 2D matrix of protein interactions
+        Returns:    a dataframe of protein interactions
+        """
+        return self.protein_data_df
+    
+    def get_index(self,  protein : str or None = None) -> dict() or int:
+        """             
+        Purpose:    to allow access to the protein->index dictionary
+        Returns:    either the index for a specific protein or a dictionary of 
+                    protein names and their indexes
+        """
+        if (protein == None):
+            return self.protein_indexes
+
+        return self.protein_indexes[protein]
+    
+    def get_protein(self, index : int or None = None) -> np.array or str:
+        """             
+        Purpose:    to access the names of proteins in the matrix
+        Returns:    either the name of a protein at a specific index, or the 
+                    array of all proteins.
+        """
+        if (index == None):
+            return self.list_of_all_proteins_in_matrix
+        
+        return self.list_of_all_proteins_in_matrix[index]
+        
+    def get_interaction(self, index1: int, index2: int):
+        """             
+        Purpose:    to access the interaction values stored in the matrix
+        Returns:    the value at the specified indexes
+        """
+        return self.protein_matrix.iloc[index1, index2]
 
 
 # a : int | str = "hello"
