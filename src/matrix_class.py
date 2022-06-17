@@ -90,13 +90,18 @@ class ProteinMatrix:
     def get_interaction(self, index1: int, index2: int):
         return self.protein_matrix.iloc[index1, index2]
 
+
+
+
+
+
 class SubMatrix:
 
     """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
     * * * * * * * * * * * * * MEMBER VARIABLES * * * * * * * * * * * * * *  
     """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
     list_of_all_proteins_in_matrix = np.array
-    protein_indexes = dict() # { 'protein name' : [new_index, old_index]}
+    protein_indexes = dict() # { 'protein name' : new_index }
     protein_matrix = pd.DataFrame()
 
     """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
@@ -126,19 +131,13 @@ class SubMatrix:
     def _init_dict_of_proteins_and_indexes(self, original_index_dict):
         """             
         Purpose:    a helper function to populate a the protein's index 
-                    dictionary 
+                    dictionary in form { 'protein_name' = protein_index }
         Returns:    n/a
         """
         new_index = 0
         for protein in self.list_of_all_proteins_in_matrix:
-            try: 
-                og_index = original_index_dict[protein]
-            except KeyError:
-                og_index = -1
-
-            # { "protein name" : [new_index, old_index]}
-            self.protein_indexes[protein] = [new_index, og_index]
             
+            self.protein_indexes[protein] = new_index
             new_index += 1
         
         print(f"new dict init: {self.protein_indexes}")
@@ -156,34 +155,39 @@ class SubMatrix:
         
         self.protein_matrix.fillna(0, inplace=True)
         
-
+        print(original_matrix)
+        #print(original_matrix.get_interaction("GPSM2", "PRKCA"))
 
         for i in range(np.size(self.list_of_all_proteins_in_matrix)):
-            
             protein1 : str = self.list_of_all_proteins_in_matrix[i]
+            # print(f"i={i}. protein={protein1}")
 
-            if (self.protein_indexes[protein1][1] != -1):
+            try: # find protein 1 in original matrix:
+                index1 = original_matrix.get_index(protein1)
 
-                for j in range (i + 1, np.size(self.list_of_all_proteins_in_matrix)) :
-
+                # fill in all of protein 1's interactions with other proteins in the submatrix
+                for j in range (i + 1, np.size(self.list_of_all_proteins_in_matrix)):
                     protein2 : str = self.list_of_all_proteins_in_matrix[j]
-                    if (self.protein_indexes[protein2][1] != -1):
-                        
-                        
-                        print(f"interaction between {protein2} and {protein2}: in og matrix")
-                    
 
+                    try: # find protein 2 in original matrix:
+                        index2 = original_matrix.get_index(protein2)
 
+                        interaction = original_matrix.get_interaction(index1, index2)
+                        print(f"SUCCESSSSSSSSS: interaction btw {protein1} and {protein2} is {interaction}")
 
-        # # take each pair of proteins, find their indexes, and then populate the matrix with their interaction
-        # for n in range(len(self.protein_data_df)): 
-        #     index1 = self.protein_indexes[self.protein_data_df.iloc[n, 0]]
-        #     index2 = self.protein_indexes[self.protein_data_df.iloc[n, 1]]
-        #     num = self.protein_data_df.iloc[n, 2]
+                        self.protein_matrix.iloc[i, j] = interaction
+                        self.protein_matrix.iloc[j, i] = interaction
 
-        #     self.protein_matrix.iloc[index1, index2] = num
-        #     self.protein_matrix.iloc[index2, index1] = num
+                    except KeyError: # protein2 not in original matrix
+                        pass
+                        # print(f"key error: {protein2} not in original matrix")
 
+            except KeyError: # protein1 not in original matrix
+                pass 
+                # print(f"key error: {protein1} not in original matrix")
+            
+            
+        print(self.protein_matrix)
 
 
 
