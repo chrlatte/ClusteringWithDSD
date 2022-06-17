@@ -3,29 +3,20 @@ import numpy as np
 
 class ProteinMatrix:
 
-
-
-    # name = "pizza"
-
-	# type = "snack"
-
-    # def _init_(self, type):
-
-   	# 	self.type = type
-    
-    """
-    member variables:
-    """
-
+    """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+    * * * * * * * * * * * * * MEMBER VARIABLES * * * * * * * * * * * * * *  
+    """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
     protein_data_df = pd.DataFrame
     list_of_all_proteins_in_matrix = np.array
     protein_indexes = dict()
     protein_matrix = pd.DataFrame()
 
 
+    """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+    * * * * * * * * * * * * * * INITIALIZERS * * * * * * * * * * * * * * *  
+    """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 
-
-    def __init__(self, csv_filename: str):
+    def __init__(self, csv_filename: str, **kwargs):
 
         self.protein_data_df = pd.read_csv(csv_filename, delimiter = '\s+', names = ["gene_1", "gene_2", "edge_weight"]) 
 
@@ -35,20 +26,13 @@ class ProteinMatrix:
         self._init_matrix()
 
 
-        
-    
-    
-
-    def __repr__(self, **kwargs): 
+    def __repr__(self): 
         with pd.option_context('display.max_rows', 10,
                         'display.max_columns', 10,
                         'display.precision', 5):
                 print(self.protein_matrix)
                 # print(self.protein_data_df)
         return ""
-
-
-
 
 
     def _init_dict_of_proteins_and_indexes(self):
@@ -61,9 +45,6 @@ class ProteinMatrix:
         for protein in self.list_of_all_proteins_in_matrix:
             self.protein_indexes[protein] = index
             index += 1
-        
-
-
 
     def _init_matrix(self):
         """             
@@ -85,7 +66,48 @@ class ProteinMatrix:
             self.protein_matrix.iloc[index1, index2] = num
             self.protein_matrix.iloc[index2, index1] = num
 
+
+
+    """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+    * * * * * * * * * * * * * * * GETTERS * * * * * * * * * * * * * * * * *  
+    """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+    def get_matrix(self) -> pd.DataFrame:
+        return self.protein_data_df
+    
+    def get_index(self,  protein : str or None = None) -> dict() or int:
+        if (protein == None):
+            return self.protein_indexes
+
+        return self.protein_indexes[protein]
         
 
-            
-            
+
+
+
+
+class SubMatrix:
+    def __init__(self, list_of_proteins, matrix : ProteinMatrix):
+        print(f"instance of submatrix class")
+        # note: not all proteins in list of proteins could be in ProteinMatrix. if so, (their index isnt found in the matrix dictionary),catch the error and put the protein in the table but with only zeros. 
+
+        
+
+
+
+
+
+
+
+# a : int | str = "hello"
+
+# class Foo:
+#     def __init__(self, a : int | None = None, b : str | None = None, c : list[str] | None = None) -> None:
+#         pass
+
+# f = Foo(b="hello")
+
+# def bar(b, *args, a=3, **kwargs):
+#     kwargs["whatever"]
+#     ...
+
+# bar(1, 2,3,4, a=18, whatever=3)

@@ -14,7 +14,7 @@ def main():
 
     matrix = ProteinMatrix("../data/testing_data/tiny_dream3.txt")
 
-    print(matrix)
+    print(matrix.get_matrix)
 
 
 
