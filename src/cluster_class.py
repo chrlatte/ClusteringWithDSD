@@ -36,10 +36,13 @@ class SingleCluster:
         
         TODO: if the first item is a string, then it is a protein name. if it is an int, then it is a cluster number. may only want to initialize based on whats in the list
         """
-        self.cluster_number = proteins_in_cluster.pop(0)
-        self.other_number = proteins_in_cluster.pop(0)
+        try: 
+            self.cluster_number = proteins_in_cluster.pop(0)
+            self.other_number = proteins_in_cluster.pop(0)
 
-        self.proteins_in_cluster = proteins_in_cluster
+            self.proteins_in_cluster = proteins_in_cluster
+        except:
+            print("Error while initializing single cluster")
         
     def __repr__(self): 
         """             
