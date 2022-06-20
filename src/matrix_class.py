@@ -1,3 +1,14 @@
+"""
+Author: Charlotte Versavel
+Date:   June 2022
+
+                             matrix_class.py
+
+Purpose: a class to represent a matrix of protein interactions
+
+"""
+
+
 import pandas as pd 
 import numpy as np
 
