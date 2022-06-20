@@ -22,11 +22,11 @@ def main():
     # degree = matrix.find_degree("PRKCA")
     # print(degree)
 
-    degree_list =  DegreeList(matrix)
-    print(f"Degree list: {degree_list.get_degree_list()}")
-    print(f"{degree_list.get_protein_at_index(0, degree=True)}")
+    # degree_list =  DegreeList(matrix)
+    # print(f"Degree list: {degree_list.get_degree_list()}")
+    # print(f"{degree_list.get_protein_at_index(0, degree=True)}")
      
-
+    
 
 
 if __name__ == "__main__":
