@@ -322,27 +322,56 @@ class SubMatrix:
 
 
 class DegreeList:
+    
+    """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+    * * * * * * * * * * * * * MEMBER VARIABLES * * * * * * * * * * * * * *  
+    """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+    sorted_protein_degree_dict = dict()
 
+    """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+    * * * * * * * * * * * * * * INITIALIZERS * * * * * * * * * * * * * * *  
+    """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+    def __init__(self, matrix : ProteinMatrix) -> None:
+        """            
+        Parameters: matrix is populated with proteins and their interaction 
+                    weights
+        Purpose:    to take in a proteinMatrix (or submatrix) and create a 
+                    sorted dictionary of protein:degree for all proteins in the 
+                    matrix.
+        Returns:    n/a
+        """
+        # self.all_proteins = matrix.get_list_of_proteins()
 
+        protein_degree_dict = {name:matrix.find_degree(name) for name in matrix.get_list_of_proteins()}
+        # print(f"{protein_degree_dict}")
 
+        self.sorted_protein_degree_dict = sorted(protein_degree_dict.items(), key=lambda x: x[1], reverse=True)
 
+        #print(f"{self.sorted_protein_degree_dict}")
 
-    """             
-    Purpose:    to take in a proteinMatrix (or submatrix) and create a sorted dictionary of protein:degree for all proteins in the matrix.
-    """
-    def __init__(self, matrix : ProteinMatrix):
-        self.all_proteins = matrix.get_list_of_proteins()
-        
-        self.protein_degree_dict = {}
+        #print(self.sorted_protein_degree_dict[1])
 
-        for protein in self.all_proteins:
-            self.protein_degree_dict[protein] = matrix.find_degree(protein)
-
-
-
-
-        self.protein_degree_dict = {name:matrix.find_degree(name) for name in matrix.get_list_of_proteins()}
-
-        print(f"{self.protein_degree_dict}")
-
+    """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+    * * * * * * * * * * * * * * * GETTERS * * * * * * * * * * * * * * * * *  
+    """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+    def get_degree_list(self) -> list():
+        """             
+        Purpose:    to allow access to the sorted degree list
+        Returns:    a list of tuples of (protein, degree)
+        """
+        return self.sorted_protein_degree_dict
+    
+    def get_protein_at_index(self, index : int, degree = False) -> str or tuple:
+        """             
+        Parameters: index is the index of the protein in the sorted list
+                    degree is a boolean that determines if the degree is returned as well
+        Purpose:    to return the protein at the specified index
+        Returns:    the protein at the specified index, or if degree is True, a 
+                    tuple of (protein, degree)
+        """
+        if not degree:
+            return self.sorted_protein_degree_dict[index][0]
+        else:
+            return self.sorted_protein_degree_dict[index]
+    
 

@@ -19,10 +19,12 @@ def main():
     list = ["PRKCA", "GPSM2", "SRF", "APROTEIN", "OTHERPROTEIN"]
     submatrix = SubMatrix(list, matrix)
 
-    degree = matrix.find_degree("PRKCA")
-    print(degree)
+    # degree = matrix.find_degree("PRKCA")
+    # print(degree)
 
     degree_list =  DegreeList(matrix)
+    print(f"Degree list: {degree_list.get_degree_list()}")
+    print(f"{degree_list.get_protein_at_index(0, degree=True)}")
      
 
 
