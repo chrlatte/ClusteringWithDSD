@@ -22,6 +22,9 @@ class ProteinMatrix:
     protein_indexes = dict()
     protein_matrix = pd.DataFrame()
 
+    "* * * * * * * * * * degree dictionary variables * * * * * * * * * * *"
+    sorted_protein_degree_dict = dict()
+
 
     """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
     * * * * * * * * * * * * * * INITIALIZERS * * * * * * * * * * * * * * *  
@@ -158,8 +161,40 @@ class ProteinMatrix:
 
 
 
+    "* * * * * * * * * * degree dictionary functions * * * * * * * * * * *"
+    def _init_degree_list_(self) -> None:
+        """            
+        Purpose:    to take in a proteinMatrix (or submatrix) and create a 
+                    sorted dictionary of protein:degree for all proteins in the 
+                    matrix.
+        Returns:    n/a
+        """
+        protein_degree_dict = {name:self.find_degree(name) for name in self.list_of_all_proteins_in_matrix}
+
+        self.sorted_protein_degree_dict = sorted(protein_degree_dict.items(), key=lambda x: x[1], reverse=True)
 
 
+    def get_degree_list(self) -> list():
+        """             
+        Purpose:    to allow access to the sorted degree list
+        Returns:    a list of tuples of (protein, degree)
+        """
+        return self.sorted_protein_degree_dict
+    
+    def get_protein_at_degreelist_index(self, index : int, degree = False) -> str or tuple:
+        """             
+        Parameters: index is the index of the protein in the sorted list
+                    degree is a boolean that determines if the degree is returned as well
+        Purpose:    to return the protein at the specified index
+        Returns:    the protein at the specified index, or if degree is True, a 
+                    tuple of (protein, degree)
+        """
+        if not degree:
+            return self.sorted_protein_degree_dict[index][0]
+        else:
+            return self.sorted_protein_degree_dict[index]
+    
+    def create_list_of_proteins_connected_to_cluster(self, cluster : SingleCluster, max_list_length : int or None = None, min_num_connections : int = 3) -> np.ndarray:
 
 
 
