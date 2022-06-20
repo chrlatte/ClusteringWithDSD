@@ -42,7 +42,7 @@ class SingleCluster:
 
             self.proteins_in_cluster = proteins_in_cluster
         except:
-            print("Error while initializing single cluster")
+            print("Error while initializing a cluster from array: {proteins_in_cluster}")
         
     def __repr__(self): 
         """             
