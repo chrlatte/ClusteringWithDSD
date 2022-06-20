@@ -19,6 +19,8 @@ def main():
     list = ["PRKCA", "GPSM2", "SRF", "APROTEIN", "OTHERPROTEIN"]
     submatrix = SubMatrix(list, matrix)
 
+    degree = matrix.find_degree("PRKCA")
+
 
 
 if __name__ == "__main__":

@@ -136,6 +136,15 @@ class ProteinMatrix:
         """
         return self.protein_matrix.iloc[index1, index2]
 
+    def find_degree(self, protein: str) -> int:
+        """             
+        Parameters: protein the name of a protein
+        Purpose:    to find the degree of a protein
+        Returns:    the degree of the protein
+        """
+        return self.protein_matrix.loc[protein].sum()
+
+
 
 
 
