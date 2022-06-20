@@ -107,6 +107,13 @@ class ProteinMatrix:
         """
         return self.protein_data_df
     
+    def get_list_of_proteins(self) -> np.array:
+        """             
+        Purpose:    to access the list of all proteins in the matrix
+        Returns:    an array of all proteins in the matrix
+        """
+        return self.list_of_all_proteins_in_matrix
+
     def get_index(self,  protein : str or None = None) -> dict() or int:
         """             
         Purpose:    to allow access to the protein->index dictionary
@@ -142,7 +149,12 @@ class ProteinMatrix:
         Purpose:    to find the degree of a protein
         Returns:    the degree of the protein
         """
-        return self.protein_matrix.loc[protein].sum()
+        count = 0
+        for elem in self.protein_matrix.loc[protein]:
+            if elem != 0:
+                count += 1
+        
+        return count
 
 
 
@@ -157,9 +169,8 @@ class ProteinMatrix:
 
 
 
-
-# todo: descriptions of the two classes and their functions
-# todo: test the getters for submatrix
+# TODO: descriptions of the two classes and their functions
+# TODO: test the getters for submatrix
 
 
 
@@ -245,6 +256,13 @@ class SubMatrix:
         """
         return self.protein_data_df
     
+    def get_list_of_proteins(self) -> np.array:
+        """             
+        Purpose:    allows for access to the list of proteins in the matrix
+        Returns:    a list of proteins
+        """
+        return self.list_of_all_proteins_in_matrix
+    
     def get_index(self,  protein : str or None = None) -> dict() or int:
         """             
         Purpose:    to allow access to the protein->index dictionary
@@ -274,6 +292,18 @@ class SubMatrix:
         """
         return self.protein_matrix.iloc[index1, index2]
 
+    def find_degree(self, protein: str) -> int:
+        """             
+        Parameters: protein the name of a protein
+        Purpose:    to find the degree of a protein
+        Returns:    the degree of the protein
+        """
+        count = 0
+        for elem in self.protein_matrix.loc[protein]:
+            if elem != 0:
+                count += 1
+        
+        return count
 
 # a : int | str = "hello"
 
@@ -288,3 +318,31 @@ class SubMatrix:
 #     ...
 
 # bar(1, 2,3,4, a=18, whatever=3)
+
+
+
+class DegreeList:
+
+
+
+
+
+    """             
+    Purpose:    to take in a proteinMatrix (or submatrix) and create a sorted dictionary of protein:degree for all proteins in the matrix.
+    """
+    def __init__(self, matrix : ProteinMatrix):
+        self.all_proteins = matrix.get_list_of_proteins()
+        
+        self.protein_degree_dict = {}
+
+        for protein in self.all_proteins:
+            self.protein_degree_dict[protein] = matrix.find_degree(protein)
+
+
+
+
+        self.protein_degree_dict = {name:matrix.find_degree(name) for name in matrix.get_list_of_proteins()}
+
+        print(f"{self.protein_degree_dict}")
+
+

@@ -20,6 +20,10 @@ def main():
     submatrix = SubMatrix(list, matrix)
 
     degree = matrix.find_degree("PRKCA")
+    print(degree)
+
+    degree_list =  DegreeList(matrix)
+     
 
 
 
