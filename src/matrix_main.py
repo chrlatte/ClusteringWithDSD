@@ -14,7 +14,8 @@ def main():
 
     matrix = ProteinMatrix("../data/testing_data/tiny_dream3.txt")
 
-    #print(matrix.get_interaction("PRKCA", "GPSM2"))
+    # print(matrix.get_interaction("PRKCA", "GPSM2"))
+    print(matrix)
 
     list = ["PRKCA", "GPSM2", "SRF", "APROTEIN", "OTHERPROTEIN"]
     submatrix = SubMatrix(list, matrix)

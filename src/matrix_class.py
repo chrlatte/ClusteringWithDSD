@@ -52,24 +52,8 @@ class ProteinMatrix:
                     portion of the matrix is shown
         Returns:    a portion of the matrix to be printed
         """
-        # with pd.option_context('display.max_rows', 10,
-        #                 'display.max_columns', 10,
-        #                 'display.precision', 5):
-        #         print(self.protein_matrix)
-        #         # print(self.protein_data_df)
         return self.protein_matrix.to_string(max_cols=20, max_rows=20)
 
-
-    # def _init_dict_of_proteins_and_indexes(self):
-    #     """             
-    #     Purpose:    a helper function to populate a the protein's index 
-    #                 dictionary 
-    #     Returns:    n/a
-    #     """
-    #     index = 0
-    #     for protein in self.list_of_all_proteins_in_matrix:
-    #         self.protein_indexes[protein] = index
-    #         index += 1
 
     def _init_matrix(self):
         """             
@@ -85,6 +69,7 @@ class ProteinMatrix:
         
         # populate matrix with the interaction of one row
         for n in range(len(self.protein_data_df)): 
+
             protein1 = self.protein_data_df.iloc[n, 0]
             protein2 = self.protein_data_df.iloc[n, 1]
             interaction = self.protein_data_df.iloc[n, 2]
@@ -110,28 +95,6 @@ class ProteinMatrix:
         Returns:    an array of all proteins in the matrix
         """
         return self.list_of_all_proteins_in_matrix
-
-    # def get_index(self,  protein : str or None = None) -> dict() or int:
-    #     """             
-    #     Purpose:    to allow access to the protein->index dictionary
-    #     Returns:    either the index for a specific protein or a dictionary of 
-    #                 protein names and their indexes
-    #     """
-    #     if (protein == None):
-    #         return self.protein_indexes
-
-    #     return self.protein_indexes[protein]
-    
-    def get_protein(self, index : int or None = None) -> np.array or str:
-        """             
-        Purpose:    to access the names of proteins in the matrix
-        Returns:    either the name of a protein at a specific index, or the 
-                    array of all proteins.
-        """
-        if (index == None):
-            return self.list_of_all_proteins_in_matrix
-        
-        return self.list_of_all_proteins_in_matrix[index]
         
     def get_interaction(self, protein1: str, protein2: str):
         """             
@@ -164,11 +127,6 @@ class ProteinMatrix:
                 count += 1
         
         return count
-
-
-
-    
-
 
 
 
@@ -248,28 +206,6 @@ class SubMatrix:
         """
         return self.list_of_all_proteins_in_matrix
     
-    # def get_index(self,  protein : str or None = None) -> dict() or int:
-    #     """             
-    #     Purpose:    to allow access to the protein->index dictionary
-    #     Returns:    either the index for a specific protein or a dictionary of 
-    #                 protein names and their indexes
-    #     """
-    #     if (protein == None):
-    #         return self.protein_indexes
-
-    #     return self.protein_indexes[protein]
-    
-    def get_protein(self, index : int or None = None) -> np.array or str:
-        """             
-        Purpose:    to access the names of proteins in the matrix
-        Returns:    either the name of a protein at a specific index, or the 
-                    array of all proteins.
-        """
-        if (index == None):
-            return self.list_of_all_proteins_in_matrix
-        
-        return self.list_of_all_proteins_in_matrix[index]
-        
     
     def get_interaction(self, protein1: str, protein2: str):
         """             
@@ -277,8 +213,6 @@ class SubMatrix:
         Returns:    the value at the specified indexes
         """
         return self.protein_matrix.loc[protein1, protein2]
-
-    
 
     def find_degree(self, protein: str) -> int:
         """             
