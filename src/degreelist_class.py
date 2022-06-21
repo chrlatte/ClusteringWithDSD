@@ -37,16 +37,12 @@ class DegreeList:
                     matrix.
         Returns:    n/a
         """
-        # self.all_proteins = matrix.get_list_of_proteins()
+        self.protein_matrix = matrix
 
         protein_degree_dict = {name:matrix.find_degree(name) for name in matrix.get_list_of_proteins()}
-        # print(f"{protein_degree_dict}")
 
         self.sorted_protein_degree_dict = sorted(protein_degree_dict.items(), key=lambda x: x[1], reverse=True)
 
-        #print(f"{self.sorted_protein_degree_dict}")
-
-        #print(self.sorted_protein_degree_dict[1])
 
     def __repr__(self): 
         """             
@@ -91,19 +87,16 @@ class DegreeList:
         Returns:    the number of edges
         """
         num_edges = 0
-
-        self.protein_matrix.has_edge("PRKCA", "KRAS")
-
         # print(cluster_list)
-        # for cluster_protein in cluster_list:
-        #     # print(f"protein1: {protein}, protein2: {cluster_protein}")
+        for cluster_protein in cluster_list:
+            # print(f"protein1: {protein}, protein2: {cluster_protein}")
 
-        #     if (self.protein_matrix).has_edge("PRKCA", "KRAS"):
-        #         num_edges += 1
-        # return num_edges
+            if (self.protein_matrix).has_edge(protein, cluster_protein):
+                num_edges += 1
+        return num_edges
 
 
-    def create_list_of_proteins_connected_to_cluster(self, cluster_list : np.ndarray, max_list_length : int or None = None, min_num_connections : int = 3) -> np.ndarray:
+    def create_list_of_proteins_connected_to_cluster(self, list_of_proteins: np.ndarray, cluster_list : np.ndarray, max_list_length : int or None = None, min_num_connections : int = 3) -> np.ndarray:
         """             
         Parameters: cluster_list is a list of proteins in a cluster
                     max_list_length is an upper bound for the number of proteins to return in a list. If None, all proteins with at least min_num_connections connections are added to the list
@@ -111,7 +104,17 @@ class DegreeList:
         Purpose:    to create a list of proteins that are connected to the cluster
         Returns:    a list of proteins that are connected to the cluster
         """
-        # for protein in cluster_list:
-        #     num_edges = determine_num_edges_to_cluster(protein, cluster_list)
-        #     print(f"{protein} has {num_edges} connections to proteins in the cluster")
+        
+        qualifying_proteins = np.ndarray
+
+        for protein in list_of_proteins:
+            num_edges = self.determine_num_edges_to_cluster(protein, cluster_list)
+            print(f"{protein} has {num_edges} connections to proteins in the cluster")
+            if (num_edges >= min_num_connections):
+                if (qualifying_proteins.size >= max_list_length):
+                    qualifying_proteins.append(protein)
+        
+        return qualifying_proteins
+
+
 

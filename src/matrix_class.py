@@ -94,6 +94,7 @@ class ProteinMatrix:
         Purpose:    to access the list of all proteins in the matrix
         Returns:    an array of all proteins in the matrix
         """
+        
         return self.list_of_all_proteins_in_matrix
         
     def get_interaction(self, protein1: str, protein2: str):
@@ -109,7 +110,7 @@ class ProteinMatrix:
         Purpose:    to determine if there is an edge between two proteins
         Returns:    true if there is an edge, false if there is not
         """
-        print(f"has edge function called. protein1 {protein1}, protein2 {protein2}")
+        
         if (self.protein_matrix.loc[protein1, protein2] == 0):
         # if (self.protein_matrix.loc[protein1, protein2] == 0):
             return False

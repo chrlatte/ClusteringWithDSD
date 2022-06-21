@@ -15,27 +15,26 @@ from degreelist_class import *
 def main():
 
     matrix = ProteinMatrix("../data/testing_data/tiny_dream3.txt")
-    print(f"Matrix:\n{matrix}")
+    # print(f"Matrix:\n{matrix}")
 
 
     clusters = ProteinClusters("../data/testing_data/fake_cluster.txt")
-    print(f"Clusters:\n{clusters}")
-    clusters.print_all()
+    # print(f"Clusters:\n{clusters}")
+    # clusters.print_all()
 
 
     degreelist = DegreeList(matrix)
-    print(f"Degree list:\n{degreelist}")
+    # print(f"Degree list:\n{degreelist}")
 
     # print(f"cluster 2:\n{clusters.get_cluster(2)}")
 
-    matrix.has_edge('KRAS', 'CDKN1A')
+    # matrix.has_edge("PRKCA", "KRAS")
 
+    # degreelist.determine_num_edges_to_cluster("PRKCA", ["KRAS", "CDKN1A"])
 
-    # print(f"{matrix.has_edge('KRAS', 'CDKN1A')}")
-
-    # degreelist.determine_num_edges_to_cluster("PRKCA", ['KRAS', 'CDKN1A'])
-
-    # degreelist.create_list_of_proteins_connected_to_cluster(clusters.get_proteins_from_cluster(0))
+    #print(f"list of proteins: {matrix.get_list_of_proteins}")
+    print(matrix.get_list_of_proteins)
+    #degreelist.create_list_of_proteins_connected_to_cluster(matrix.get_list_of_proteins, clusters.get_proteins_from_cluster(0))
     
 
     
