@@ -10,6 +10,7 @@ Purpose: a main to test the matrix and cluster classes together, focusing mainly
 
 from matrix_class import *
 from cluster_class import *
+from degreelist_class import *
 
 def main():
 
