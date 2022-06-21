@@ -8,9 +8,10 @@ Purpose: a class TODO
 
 """
 
-from matrix_class import *
 import pandas as pd 
 import numpy as np
+
+from matrix_class import *
 
 
 
@@ -80,6 +81,28 @@ class DegreeList:
             return self.sorted_protein_degree_dict[index]
     
 
+    
+    
+    def determine_num_edges_to_cluster(self, protein : str, cluster_list : np.ndarray) -> int:
+        """             
+        Parameters: protein is a single protein in the matrix
+                    cluster_list is a list of proteins in a cluster
+        Purpose:    to determine the number of edges between the protein and the proteins in the cluster
+        Returns:    the number of edges
+        """
+        num_edges = 0
+
+        self.protein_matrix.has_edge("PRKCA", "KRAS")
+
+        # print(cluster_list)
+        # for cluster_protein in cluster_list:
+        #     # print(f"protein1: {protein}, protein2: {cluster_protein}")
+
+        #     if (self.protein_matrix).has_edge("PRKCA", "KRAS"):
+        #         num_edges += 1
+        # return num_edges
+
+
     def create_list_of_proteins_connected_to_cluster(self, cluster_list : np.ndarray, max_list_length : int or None = None, min_num_connections : int = 3) -> np.ndarray:
         """             
         Parameters: cluster_list is a list of proteins in a cluster
@@ -88,5 +111,7 @@ class DegreeList:
         Purpose:    to create a list of proteins that are connected to the cluster
         Returns:    a list of proteins that are connected to the cluster
         """
-        pass
+        # for protein in cluster_list:
+        #     num_edges = determine_num_edges_to_cluster(protein, cluster_list)
+        #     print(f"{protein} has {num_edges} connections to proteins in the cluster")
 

@@ -144,6 +144,18 @@ class ProteinMatrix:
         """
         return self.protein_matrix.iloc[index1, index2]
 
+    def has_edge(self, protein1: str, protein2: str) -> bool:
+        """       
+        Parameters: protein1, protein2 are the names of the proteins 
+        Purpose:    to determine if there is an edge between two proteins
+        Returns:    true if there is an edge, false if there is not
+        """
+        print(f"has edge function called. protein1 {protein1}, protein2 {protein2}")
+        if (self.protein_matrix.iloc[self.get_index(protein1), self.get_index(protein2)] == 0):
+        # if (self.protein_matrix.loc[protein1, protein2] == 0):
+            return False
+        return True
+
     def find_degree(self, protein: str) -> int:
         """             
         Parameters: protein the name of a protein
@@ -290,6 +302,8 @@ class SubMatrix:
         Returns:    the value at the specified indexes
         """
         return self.protein_matrix.iloc[index1, index2]
+
+    
 
     def find_degree(self, protein: str) -> int:
         """             

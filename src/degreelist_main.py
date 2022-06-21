@@ -25,6 +25,17 @@ def main():
 
     degreelist = DegreeList(matrix)
     print(f"Degree list:\n{degreelist}")
+
+    # print(f"cluster 2:\n{clusters.get_cluster(2)}")
+
+    matrix.has_edge('KRAS', 'CDKN1A')
+
+
+    # print(f"{matrix.has_edge('KRAS', 'CDKN1A')}")
+
+    # degreelist.determine_num_edges_to_cluster("PRKCA", ['KRAS', 'CDKN1A'])
+
+    # degreelist.create_list_of_proteins_connected_to_cluster(clusters.get_proteins_from_cluster(0))
     
 
     

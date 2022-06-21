@@ -42,7 +42,7 @@ class SingleCluster:
 
             self.proteins_in_cluster = proteins_in_cluster
         except:
-            print("Error while initializing a cluster from array: {proteins_in_cluster}")
+            print(f"Error while initializing a cluster from array: {proteins_in_cluster}")
         
     def __repr__(self): 
         """             
@@ -56,13 +56,20 @@ class SingleCluster:
     """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
     * * * * * * * * * * * * * * * GETTERS * * * * * * * * * * * * * * * * *  
     """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-
+    def get_cluster_number(self) -> int:
+        """             
+        Purpose:    to allow access to the cluster number
+        Returns:    the cluster number
+        """
+        return int(self.cluster_number)
+    
     def get_protein_list(self) -> np.ndarray:
         """             
         Purpose:    to allow access to the list of proteins in a cluster
         Returns:    the list of proteins in the cluster
         """
         return self.proteins_in_cluster
+    
 
 
 class ProteinClusters:
@@ -119,18 +126,42 @@ class ProteinClusters:
         Purpose:    to get a cluster from the list of all clusters
         Returns:    the cluster with the given number
         """
-        if (self.all_clusters[cluster_number].cluster_number == cluster_number):
+        # print(f"get cluster called. printing self.all_clusters: {self.all_clusters}")
+
+        # print(f"looking for cluster number: {cluster_number}")
+        # print(f"self.all_clusters[cluster_number] is {self.all_clusters[cluster_number]}. it's cluster number is {(self.all_clusters[cluster_number]).get_cluster_number()}")
+
+
+        #print(self.all_clusters[cluster_number].get_cluster_number())
+        # print(f"comparing {type(cluster_number)} to {type(self.all_clusters[cluster_number].get_cluster_number())}")
+        try:
+            if (self.all_clusters[cluster_number].get_cluster_number() == cluster_number):
             # first: assume clusters were read in in order
-            return self.all_clusters[cluster_number]
-        else:
+                return self.all_clusters[cluster_number]
+            else:
             # possible that clusters were read out of order:
+                for cluster in self.all_clusters:
+                    if (cluster.get_cluster_number() == cluster_number):
+                        return cluster
+        except IndexError:
+            print(f"ERROR! cluster number {cluster_number} out of bounds. searching for it anyways")
             for cluster in self.all_clusters:
-                if cluster.cluster_number == cluster_number:
+                if (cluster.get_cluster_number() == cluster_number):
                     return cluster
+    
         
         print(f"ERROR! cluster {cluster_number} not found. returning empty cluster")
         return SingleCluster([]) # if no cluster was found, return an empty cluster
-        
+    
+    def get_proteins_from_cluster(self, cluster_number: int) -> np.ndarray:
+        """             
+        Parameters: cluster_number is the number of the cluster to get
+        Purpose:    to get the list of proteins from a cluster
+        Returns:    the list of proteins in the cluster
+        """
+        return self.get_cluster(cluster_number).get_protein_list()
+
+
     def print_all(self) -> None:
         """             
         Purpose:    to print all the clusters in the ProteinClusters object
