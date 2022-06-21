@@ -15,13 +15,19 @@ from degreelist_class import *
 def main():
 
     matrix = ProteinMatrix("../data/testing_data/tiny_dream3.txt")
+    print(f"Matrix:\n{matrix}")
 
-    matrix._init_degree_list_()
 
     clusters = ProteinClusters("../data/testing_data/fake_cluster.txt")
-
-    print(clusters)
+    print(f"Clusters:\n{clusters}")
     clusters.print_all()
+
+
+    degreelist = DegreeList(matrix)
+    print(f"Degree list:\n{degreelist}")
+    
+
+    
 
      
     

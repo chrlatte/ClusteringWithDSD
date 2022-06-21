@@ -4,11 +4,11 @@ Date:   June 2022
 
                              degreelist_class.py
 
-Purpose: a class to 
+Purpose: a class TODO
 
 """
 
-
+from matrix_class import *
 import pandas as pd 
 import numpy as np
 
@@ -19,9 +19,10 @@ class DegreeList:
     """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
     * * * * * * * * * * * * * MEMBER VARIABLES * * * * * * * * * * * * * *  
     """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+    protein_matrix : ProteinMatrix = ProteinMatrix
+
     sorted_protein_degree_dict = dict()
-    "* * * * * * * * * * degree dictionary variables * * * * * * * * * * *"
-    sorted_protein_degree_dict = dict()
+
 
     """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
     * * * * * * * * * * * * * * INITIALIZERS * * * * * * * * * * * * * * *  
@@ -45,6 +46,15 @@ class DegreeList:
         #print(f"{self.sorted_protein_degree_dict}")
 
         #print(self.sorted_protein_degree_dict[1])
+
+    def __repr__(self): 
+        """             
+        Purpose:    to override the print function for this class to print the 
+                    sorted dictionary when called
+        Returns:    a string of the dictionary
+        """
+        
+        return str(self.sorted_protein_degree_dict)
 
     """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
     * * * * * * * * * * * * * * * GETTERS * * * * * * * * * * * * * * * * *  
@@ -70,39 +80,6 @@ class DegreeList:
             return self.sorted_protein_degree_dict[index]
     
 
-    "* * * * * * * * * * degree dictionary functions * * * * * * * * * * *"
-    def _init_degree_list_(self) -> None:
-        """            
-        Purpose:    to take in a proteinMatrix (or submatrix) and create a 
-                    sorted dictionary of protein:degree for all proteins in the 
-                    matrix.
-        Returns:    n/a
-        """
-        protein_degree_dict = {name:self.find_degree(name) for name in self.list_of_all_proteins_in_matrix}
-
-        self.sorted_protein_degree_dict = sorted(protein_degree_dict.items(), key=lambda x: x[1], reverse=True)
-
-
-    def get_degree_list(self) -> list():
-        """             
-        Purpose:    to allow access to the sorted degree list
-        Returns:    a list of tuples of (protein, degree)
-        """
-        return self.sorted_protein_degree_dict
-    
-    def get_protein_at_degreelist_index(self, index : int, degree = False) -> str or tuple:
-        """             
-        Parameters: index is the index of the protein in the sorted list
-                    degree is a boolean that determines if the degree is returned as well
-        Purpose:    to return the protein at the specified index
-        Returns:    the protein at the specified index, or if degree is True, a 
-                    tuple of (protein, degree)
-        """
-        if not degree:
-            return self.sorted_protein_degree_dict[index][0]
-        else:
-            return self.sorted_protein_degree_dict[index]
-    
     def create_list_of_proteins_connected_to_cluster(self, cluster_list : np.ndarray, max_list_length : int or None = None, min_num_connections : int = 3) -> np.ndarray:
         """             
         Parameters: cluster_list is a list of proteins in a cluster
