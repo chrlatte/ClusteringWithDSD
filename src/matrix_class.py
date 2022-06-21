@@ -53,7 +53,7 @@ class ProteinMatrix:
         """             
         Purpose:    to override the print function for this class so only a 
                     portion of the matrix is shown
-        Returns:    an empty string. all printing is done in the function
+        Returns:    a portion of the matrix to be printed
         """
         # with pd.option_context('display.max_rows', 10,
         #                 'display.max_columns', 10,
