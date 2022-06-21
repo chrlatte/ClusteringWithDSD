@@ -55,12 +55,12 @@ class ProteinMatrix:
                     portion of the matrix is shown
         Returns:    an empty string. all printing is done in the function
         """
-        with pd.option_context('display.max_rows', 10,
-                        'display.max_columns', 10,
-                        'display.precision', 5):
-                print(self.protein_matrix)
-                # print(self.protein_data_df)
-        return ""
+        # with pd.option_context('display.max_rows', 10,
+        #                 'display.max_columns', 10,
+        #                 'display.precision', 5):
+        #         print(self.protein_matrix)
+        #         # print(self.protein_data_df)
+        return self.protein_matrix.to_string(max_cols=20, max_rows=20)
 
 
     def _init_dict_of_proteins_and_indexes(self):
