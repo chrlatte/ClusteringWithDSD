@@ -21,7 +21,6 @@ class ProteinMatrix:
     """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
     protein_data_df = pd.DataFrame
     list_of_all_proteins_in_matrix = np.array
-    protein_indexes = dict()
     protein_matrix = pd.DataFrame()
 
     """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
@@ -40,8 +39,6 @@ class ProteinMatrix:
             # store names of all proteins
             self.list_of_all_proteins_in_matrix = np.unique(np.append(self.
                 protein_data_df["gene_1"], self.protein_data_df["gene_2"]))
-            # populate the dictionary relating protein names to their indexes
-            self._init_dict_of_proteins_and_indexes()
             # populate the matrix with protein interactions
             self._init_matrix()
         
@@ -63,16 +60,16 @@ class ProteinMatrix:
         return self.protein_matrix.to_string(max_cols=20, max_rows=20)
 
 
-    def _init_dict_of_proteins_and_indexes(self):
-        """             
-        Purpose:    a helper function to populate a the protein's index 
-                    dictionary 
-        Returns:    n/a
-        """
-        index = 0
-        for protein in self.list_of_all_proteins_in_matrix:
-            self.protein_indexes[protein] = index
-            index += 1
+    # def _init_dict_of_proteins_and_indexes(self):
+    #     """             
+    #     Purpose:    a helper function to populate a the protein's index 
+    #                 dictionary 
+    #     Returns:    n/a
+    #     """
+    #     index = 0
+    #     for protein in self.list_of_all_proteins_in_matrix:
+    #         self.protein_indexes[protein] = index
+    #         index += 1
 
     def _init_matrix(self):
         """             
@@ -86,15 +83,14 @@ class ProteinMatrix:
         
         self.protein_matrix.fillna(0, inplace=True)
         
-        # take each pair of proteins, find their indexes, and then populate the 
-        # matrix with their interaction
+        # populate matrix with the interaction of one row
         for n in range(len(self.protein_data_df)): 
-            index1 = self.protein_indexes[self.protein_data_df.iloc[n, 0]]
-            index2 = self.protein_indexes[self.protein_data_df.iloc[n, 1]]
-            num = self.protein_data_df.iloc[n, 2]
+            protein1 = self.protein_data_df.iloc[n, 0]
+            protein2 = self.protein_data_df.iloc[n, 1]
+            interaction = self.protein_data_df.iloc[n, 2]
 
-            self.protein_matrix.iloc[index1, index2] = num
-            self.protein_matrix.iloc[index2, index1] = num
+            self.protein_matrix.loc[protein1, protein2] = interaction
+            self.protein_matrix.loc[protein2, protein1] = interaction
 
 
 
@@ -115,16 +111,16 @@ class ProteinMatrix:
         """
         return self.list_of_all_proteins_in_matrix
 
-    def get_index(self,  protein : str or None = None) -> dict() or int:
-        """             
-        Purpose:    to allow access to the protein->index dictionary
-        Returns:    either the index for a specific protein or a dictionary of 
-                    protein names and their indexes
-        """
-        if (protein == None):
-            return self.protein_indexes
+    # def get_index(self,  protein : str or None = None) -> dict() or int:
+    #     """             
+    #     Purpose:    to allow access to the protein->index dictionary
+    #     Returns:    either the index for a specific protein or a dictionary of 
+    #                 protein names and their indexes
+    #     """
+    #     if (protein == None):
+    #         return self.protein_indexes
 
-        return self.protein_indexes[protein]
+    #     return self.protein_indexes[protein]
     
     def get_protein(self, index : int or None = None) -> np.array or str:
         """             
@@ -137,12 +133,12 @@ class ProteinMatrix:
         
         return self.list_of_all_proteins_in_matrix[index]
         
-    def get_interaction(self, index1: int, index2: int):
+    def get_interaction(self, protein1: str, protein2: str):
         """             
         Purpose:    to access the interaction values stored in the matrix
-        Returns:    the value at the specified indexes
+        Returns:    the value at the specified proteins
         """
-        return self.protein_matrix.iloc[index1, index2]
+        return self.protein_matrix.loc[protein1, protein2]
 
     def has_edge(self, protein1: str, protein2: str) -> bool:
         """       
@@ -151,7 +147,7 @@ class ProteinMatrix:
         Returns:    true if there is an edge, false if there is not
         """
         print(f"has edge function called. protein1 {protein1}, protein2 {protein2}")
-        if (self.protein_matrix.iloc[self.get_index(protein1), self.get_index(protein2)] == 0):
+        if (self.protein_matrix.loc[protein1, protein2] == 0):
         # if (self.protein_matrix.loc[protein1, protein2] == 0):
             return False
         return True
@@ -191,7 +187,6 @@ class SubMatrix:
     * * * * * * * * * * * * * MEMBER VARIABLES * * * * * * * * * * * * * *  
     """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
     list_of_all_proteins_in_matrix = np.array
-    protein_indexes = dict() # { 'protein name' : new_index }
     protein_matrix = pd.DataFrame()
 
     """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
@@ -205,58 +200,37 @@ class SubMatrix:
         """
         # initialize list of proteins:
         self.list_of_all_proteins_in_matrix = np.unique(proteins_to_map)
-        # inititalize new dictionary for the proteins in this submatrix:
-        self._init_dict_of_proteins_and_indexes(original_matrix.get_index())
         # inititalize matrix:
         self._init_matrix(original_matrix)
     
-
-    def _init_dict_of_proteins_and_indexes(self, original_index_dict):
-        """             
-        Purpose:    a helper function to populate a the protein's index 
-                    dictionary in form { 'protein_name' = protein_index }
-        Returns:    n/a
-        """
-        new_index = 0
-        for protein in self.list_of_all_proteins_in_matrix:
-            
-            self.protein_indexes[protein] = new_index
-            new_index += 1
-        
-
     def _init_matrix(self, original_matrix: ProteinMatrix):
         """             
         Purpose:    a helper function to populate the new matrix with 
-                        interactions from the original matrix
+                    interactions from the original matrix
         Returns:    n/a
         """
+
         self.protein_matrix = pd.DataFrame(
             columns=self.list_of_all_proteins_in_matrix, 
             index=self.list_of_all_proteins_in_matrix)
         self.protein_matrix.fillna(0, inplace=True)
         
         for i in range(np.size(self.list_of_all_proteins_in_matrix)):
-            protein1 : str = self.list_of_all_proteins_in_matrix[i]
+            for j in range (i + 1, np.size(self.list_of_all_proteins_in_matrix)):
+                protein1 = self.list_of_all_proteins_in_matrix[i]
+                protein2 = self.list_of_all_proteins_in_matrix[j]
 
-            try: # find protein 1 in original matrix:
-                index1 = original_matrix.get_index(protein1)
-                # fill in all of protein 1's interactions with other proteins in the submatrix:
-                for j in range (i + 1, np.size(self.list_of_all_proteins_in_matrix)):
-                    protein2 : str = self.list_of_all_proteins_in_matrix[j]
+                try: 
+                    interaction = original_matrix.get_interaction(protein1, protein2)
 
-                    try: # find protein 2 in original matrix:
-                        index2 = original_matrix.get_index(protein2)
-                        # get the interaction between p1 and p2 from original matrix
-                        interaction = original_matrix.get_interaction(index1, index2)
-                        # populate submatrix
-                        self.protein_matrix.iloc[i, j] = interaction
-                        self.protein_matrix.iloc[j, i] = interaction
+                    self.protein_matrix.iloc[i, j] = interaction
+                    self.protein_matrix.iloc[j, i] = interaction
 
-                    except KeyError: # protein2 not in original matrix
-                        pass
-            except KeyError: # protein1 not in original matrix
-                pass 
-
+            
+                except KeyError: 
+                    pass
+                    # print(f"key error in init_matrix function in submatrix")
+                    
     """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
     * * * * * * * * * * * * * * * GETTERS * * * * * * * * * * * * * * * * *  
     """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
@@ -265,7 +239,7 @@ class SubMatrix:
         Purpose:    allows for access to a 2D matrix of protein interactions
         Returns:    a dataframe of protein interactions
         """
-        return self.protein_data_df
+        return self.protein_matrix
     
     def get_list_of_proteins(self) -> np.array:
         """             
@@ -274,16 +248,16 @@ class SubMatrix:
         """
         return self.list_of_all_proteins_in_matrix
     
-    def get_index(self,  protein : str or None = None) -> dict() or int:
-        """             
-        Purpose:    to allow access to the protein->index dictionary
-        Returns:    either the index for a specific protein or a dictionary of 
-                    protein names and their indexes
-        """
-        if (protein == None):
-            return self.protein_indexes
+    # def get_index(self,  protein : str or None = None) -> dict() or int:
+    #     """             
+    #     Purpose:    to allow access to the protein->index dictionary
+    #     Returns:    either the index for a specific protein or a dictionary of 
+    #                 protein names and their indexes
+    #     """
+    #     if (protein == None):
+    #         return self.protein_indexes
 
-        return self.protein_indexes[protein]
+    #     return self.protein_indexes[protein]
     
     def get_protein(self, index : int or None = None) -> np.array or str:
         """             
@@ -296,12 +270,13 @@ class SubMatrix:
         
         return self.list_of_all_proteins_in_matrix[index]
         
-    def get_interaction(self, index1: int, index2: int):
+    
+    def get_interaction(self, protein1: str, protein2: str):
         """             
         Purpose:    to access the interaction values stored in the matrix
         Returns:    the value at the specified indexes
         """
-        return self.protein_matrix.iloc[index1, index2]
+        return self.protein_matrix.loc[protein1, protein2]
 
     
 
