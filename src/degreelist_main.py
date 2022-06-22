@@ -14,10 +14,16 @@ from degreelist_class import *
 
 def main():
 
-    matrix = ProteinMatrix("../data/networks/DREAM_files/dream_3.txt")
+    testing_matrix_file = "../data/testing_data/small_dream3.txt"
+    testing_cluster_file = "../data/testing_data/fake_cluster.txt"
+
+    actual_matrix_file = "../data/networks/DREAM_files/dream_3.txt"
+    actual_cluster_file = "../data/clusters/3344522.7320912.1_ppi_anonym_v2.txt"
+
+    matrix = ProteinMatrix(actual_matrix_file)
     # print(f"Matrix:\n{matrix}")
 
-    clusters = ProteinClusters("../data/clusters/3344522.7320912.1_ppi_anonym_v2.txt")
+    clusters = ProteinClusters(actual_cluster_file)
     # print(f"Clusters:\n{clusters}")
     # clusters.print_all()
 
@@ -25,7 +31,7 @@ def main():
     degreelist = DegreeList(matrix)
     # print(f"Degree list:\n{degreelist}")
 
-
+    # print(degreelist.get_list_of_proteins_sorted_by_degree())
     #########
     
     # individual_cluster = clusters.get_cluster(0)
@@ -35,8 +41,8 @@ def main():
 
     
     for n in range(clusters.get_num_clusters()):
-        result = degreelist.create_list_of_proteins_connected_to_cluster(matrix.get_list_of_proteins(), clusters.get_proteins_from_cluster(n))
-        print(f"THE PROTEINS WITH >3 CONNECTIONS TO CLUSTER: {n} ARE {result}")
+        result = degreelist.create_list_of_proteins_connected_to_cluster(degreelist.get_list_of_proteins_sorted_by_degree(), clusters.get_proteins_from_cluster(n))
+        print(f"THE PROTEINS WITH 3+ CONNECTIONS TO CLUSTER {n} ARE {result}")
 
 
 

@@ -63,6 +63,15 @@ class DegreeList:
         """
         return self.sorted_protein_degree_dict
     
+    def get_list_of_proteins_sorted_by_degree(self) -> list():
+         
+        reverse_list_of_proteins = []
+
+        for protein_degree_pair in reversed(self.sorted_protein_degree_dict):
+            reverse_list_of_proteins.append(protein_degree_pair[0])
+
+        return reverse_list_of_proteins
+
     def get_protein_at_index(self, index : int, degree = False) -> str or tuple:
         """             
         Parameters: index is the index of the protein in the sorted list
@@ -79,24 +88,31 @@ class DegreeList:
 
     
     
-    def determine_num_edges_to_cluster(self, protein : str, cluster_list : np.ndarray) -> int:
+    def determine_num_edges_to_cluster(self, protein : str, cluster_list : np.ndarray, max_edges_until_return : int = -1) -> int:
         """             
         Parameters: protein is a single protein in the matrix
                     cluster_list is a list of proteins in a cluster
+                    max_edges_until_return allows the function to stop counting edges once a certain target is reached
         Purpose:    to determine the number of edges between the protein and the proteins in the cluster
         Returns:    the number of edges
         """
         num_edges = 0
         # print(cluster_list)
-        for cluster_protein in cluster_list:
-            # print(f"protein1: {protein}, protein2: {cluster_protein}")
-
-            if (self.protein_matrix).has_edge(protein, cluster_protein):
-                num_edges += 1
+        if max_edges_until_return == -1: # max_edges_until_return has been left unspecified
+            for cluster_protein in cluster_list:
+                if (self.protein_matrix).has_edge(protein, cluster_protein):
+                    num_edges += 1
+        else: # max_edges_until_return has been specified
+            for cluster_protein in cluster_list:
+                if (self.protein_matrix).has_edge(protein, cluster_protein):
+                    num_edges += 1
+                if num_edges >= max_edges_until_return:
+                    return num_edges
+        
         return num_edges
 
 
-    def create_list_of_proteins_connected_to_cluster(self, list_of_proteins: np.array, cluster_list : np.array, max_list_length : int or None = None, min_num_connections : int = 3) -> list:
+    def create_list_of_proteins_connected_to_cluster(self, list_of_proteins: np.array, cluster_list : np.array, max_list_length : int = -1, min_num_connections : int = 3) -> list:
         """             
         Parameters: cluster_list is a list of proteins in a cluster
                     max_list_length is an upper bound for the number of proteins to return in a list. If None, all proteins with at least min_num_connections connections are added to the list
@@ -106,16 +122,24 @@ class DegreeList:
         """
         
         qualifying_proteins = []
+        if max_list_length == -1: # max_list_length left unspecified
+            for protein in list_of_proteins:
+                num_edges = self.determine_num_edges_to_cluster(protein, cluster_list, max_edges_until_return=min_num_connections)
 
-        for protein in list_of_proteins:
-            num_edges = self.determine_num_edges_to_cluster(protein, cluster_list)
-            # print(f"{protein} has {num_edges} connections to proteins in the cluster")
-            if (num_edges >= min_num_connections):
-                # if (len(qualifying_proteins) >= max_list_length): 
-                # TODO: need to compare to max list length
-                    qualifying_proteins.append(protein)
+                if (num_edges >= min_num_connections):
+                        qualifying_proteins.append(protein)
+        else: # max_list_length has been specified    
+            for protein in list_of_proteins:
+                num_edges = self.determine_num_edges_to_cluster(protein, cluster_list, max_edges_until_return=min_num_connections)
+                
+                if (num_edges >= min_num_connections):
+                        qualifying_proteins.append(protein)
+                        if (len(qualifying_proteins) >= max_list_length):
+                            return qualifying_proteins
+            
         
         return qualifying_proteins
+        
 
 
 
