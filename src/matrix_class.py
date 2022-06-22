@@ -110,11 +110,13 @@ class ProteinMatrix:
         Purpose:    to determine if there is an edge between two proteins
         Returns:    true if there is an edge, false if there is not
         """
-        
-        if (self.protein_matrix.loc[protein1, protein2] == 0):
-        # if (self.protein_matrix.loc[protein1, protein2] == 0):
+        try:
+            if (self.protein_matrix.loc[protein1, protein2] != 0):
+            # if (self.protein_matrix.loc[protein1, protein2] == 0):
+                return True
+        except KeyError:
             return False
-        return True
+        return False
 
     def find_degree(self, protein: str) -> int:
         """             
@@ -123,11 +125,16 @@ class ProteinMatrix:
         Returns:    the degree of the protein
         """
         count = 0
-        for elem in self.protein_matrix.loc[protein]:
-            if elem != 0:
-                count += 1
+        try:
+            for elem in self.protein_matrix.loc[protein]:
+                if elem != 0:
+                    count += 1
+            
+            return count
+            
+        except KeyError:
+            return 0
         
-        return count
 
 
 

@@ -14,11 +14,10 @@ from degreelist_class import *
 
 def main():
 
-    matrix = ProteinMatrix("../data/testing_data/tiny_dream3.txt")
+    matrix = ProteinMatrix("../data/networks/DREAM_files/dream_3.txt")
     # print(f"Matrix:\n{matrix}")
-
-
-    clusters = ProteinClusters("../data/testing_data/fake_cluster.txt")
+    
+    clusters = ProteinClusters("../data/clusters/3344522.7320912.1_ppi_anonym_v2.txt")
     # print(f"Clusters:\n{clusters}")
     # clusters.print_all()
 

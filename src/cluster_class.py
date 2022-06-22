@@ -162,6 +162,13 @@ class ProteinClusters:
         """
         return self.get_cluster(cluster_number).get_protein_list()
 
+    def get_num_clusters(self) -> int:
+        """
+        Purpose:    to determine the number of clusters
+        Returns:    
+        """
+        return len(self.all_clusters)
+
 
     def print_all(self) -> None:
         """             
