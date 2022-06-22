@@ -96,7 +96,7 @@ class DegreeList:
         return num_edges
 
 
-    def create_list_of_proteins_connected_to_cluster(self, list_of_proteins: np.ndarray, cluster_list : np.ndarray, max_list_length : int or None = None, min_num_connections : int = 3) -> np.ndarray:
+    def create_list_of_proteins_connected_to_cluster(self, list_of_proteins: np.array, cluster_list : np.array, max_list_length : int or None = None, min_num_connections : int = 3) -> list:
         """             
         Parameters: cluster_list is a list of proteins in a cluster
                     max_list_length is an upper bound for the number of proteins to return in a list. If None, all proteins with at least min_num_connections connections are added to the list
@@ -105,13 +105,14 @@ class DegreeList:
         Returns:    a list of proteins that are connected to the cluster
         """
         
-        qualifying_proteins = np.ndarray
+        qualifying_proteins = []
 
         for protein in list_of_proteins:
             num_edges = self.determine_num_edges_to_cluster(protein, cluster_list)
-            print(f"{protein} has {num_edges} connections to proteins in the cluster")
+            # print(f"{protein} has {num_edges} connections to proteins in the cluster")
             if (num_edges >= min_num_connections):
-                if (qualifying_proteins.size >= max_list_length):
+                # if (len(qualifying_proteins) >= max_list_length): 
+                # TODO: need to compare to max list length
                     qualifying_proteins.append(protein)
         
         return qualifying_proteins
