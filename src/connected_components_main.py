@@ -80,12 +80,8 @@ def main():
 
 
 
-    # df_sparsed = matrix.get_matrix().astype(pd.SparseDtype(dtype=float, fill_value=0))
-    # print(df_sparsed)
 
-    # # print(df_sparsed)
-
-    # csr_matrix(df_sparsed.sparse.to_coo())
+    print(csr_matrix(matrix.get_matrix().astype(pd.SparseDtype(dtype=float, fill_value=0))))
     # # print(df_sparsed)
     # csr_matrix(df_sparsed)
     # # csr_matrix(df_sparsed) # Note you need .sparse accessor to access .to_coo()
