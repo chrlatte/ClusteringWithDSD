@@ -12,7 +12,7 @@ from matrix_class import *
 from cluster_class import *
 from degreelist_class import *
 
-from scipy.sparse import coo_matrix
+# from scipy.sparse import coo_matrix
 from scipy.sparse import csr_matrix
 from scipy.sparse.csgraph import connected_components
 
@@ -22,10 +22,13 @@ def main():
     testing_matrix_file = "../data/testing_data/small_dream3.txt"
     testing_cluster_file = "../data/testing_data/fake_cluster.txt"
 
+    smaller_testing_matrix_file = "../data/testing_data/tiny_dream3.txt"
+
+
     actual_matrix_file = "../data/networks/DREAM_files/dream_3.txt"
     actual_cluster_file = "../data/clusters/3344522.7320912.1_ppi_anonym_v2.txt"
 
-    matrix = ProteinMatrix(testing_matrix_file)
+    matrix = ProteinMatrix(smaller_testing_matrix_file)
     # print(f"Matrix:\n{matrix}")
 
     clusters = ProteinClusters(testing_cluster_file)
@@ -45,8 +48,8 @@ def main():
 
 
 
-    from pandas.api.types import CategoricalDtype
-    from scipy import sparse
+    # from pandas.api.types import CategoricalDtype
+    # from scipy import sparse
 
     # sparse_df = matrix.get_matrix().astype(pd.SparseDtype(object, fill_value=0))
 
@@ -61,12 +64,12 @@ def main():
     # user_index = df["user_id"].astype(user_cat).cat.codes
     # movie_index = df["movie_id"].astype(movie_cat).cat.codes
 
-    print(matrix.get_matrix())
-    matrix2 = coo_matrix(matrix.get_matrix())
+    # print(matrix.get_matrix())
+    # matrix2 = coo_matrix(matrix.get_matrix())
     # print(matrix2)
     # print(type(matrix2))
-    csr = matrix2.tocsr()
-    print(csr)
+    # csr = matrix2.tocsr()
+    # print(csr)
 
 
     # # Conversion via COO matrix
@@ -78,10 +81,14 @@ def main():
 
 
 
+    
 
+    matrix_csr = csr_matrix(matrix.get_matrix().astype(pd.SparseDtype(dtype=float, fill_value=0)))
+    print(matrix_csr)
 
+    n_components, labels = connected_components(matrix_csr, directed=False, return_labels=True)
+    print(f"n_components: {n_components}; labels: {labels}")
 
-    print(csr_matrix(matrix.get_matrix().astype(pd.SparseDtype(dtype=float, fill_value=0))))
     # # print(df_sparsed)
     # csr_matrix(df_sparsed)
     # # csr_matrix(df_sparsed) # Note you need .sparse accessor to access .to_coo()
