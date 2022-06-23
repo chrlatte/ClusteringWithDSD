@@ -21,7 +21,7 @@ class ProteinMatrix:
     """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
     protein_data_df = pd.DataFrame
     list_of_all_proteins_in_matrix = np.array
-    protein_matrix = pd.DataFrame()
+    protein_matrix = pd.DataFrame(dtype=float)
 
     """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
     * * * * * * * * * * * * * * INITIALIZERS * * * * * * * * * * * * * * *  
@@ -87,7 +87,7 @@ class ProteinMatrix:
         Purpose:    allows for access to a 2D matrix of protein interactions
         Returns:    a dataframe of protein interactions
         """
-        return self.protein_data_df
+        return self.protein_matrix
     
     def get_list_of_proteins(self) -> np.array:
         """             
@@ -155,6 +155,7 @@ class SubMatrix:
     list_of_all_proteins_in_matrix = np.array
     protein_matrix = pd.DataFrame()
 
+
     """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
     * * * * * * * * * * * * * * INITIALIZERS * * * * * * * * * * * * * * *  
     """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
@@ -196,7 +197,12 @@ class SubMatrix:
                 except KeyError: 
                     pass
                     # print(f"key error in init_matrix function in submatrix")
-                    
+
+
+
+    def _func_(self):
+        pass
+
     """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
     * * * * * * * * * * * * * * * GETTERS * * * * * * * * * * * * * * * * *  
     """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
