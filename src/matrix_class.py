@@ -12,7 +12,8 @@ Purpose: a class to represent a matrix of protein interactions
 import pandas as pd 
 import numpy as np
 
-
+from scipy.sparse import csr_matrix # used in submatrix class
+from scipy.sparse.csgraph import connected_components # used in submatrix class
 
 class ProteinMatrix:
 
@@ -154,13 +155,18 @@ class SubMatrix:
     """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
     list_of_all_proteins_in_matrix = np.array
     protein_matrix = pd.DataFrame()
+    csr_matrix : csr_matrix
 
 
     """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
     * * * * * * * * * * * * * * INITIALIZERS * * * * * * * * * * * * * * *  
     """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
     def __init__(self, proteins_to_map : np.array, original_matrix : ProteinMatrix):
-        """             
+        """            
+        Parameters: 
+            -   proteins_to_map: a subset of proteins in the original matrix 
+            -   original matrix: large matrix contaniing the interactions for 
+                all proteins
         Purpose:    to populate the submatrix with data from the original 
                     matrix. 
         Returns:    n/a
@@ -169,6 +175,7 @@ class SubMatrix:
         self.list_of_all_proteins_in_matrix = np.unique(proteins_to_map)
         # inititalize matrix:
         self._init_matrix(original_matrix)
+        self._init_csr_matrix_()
     
     def _init_matrix(self, original_matrix: ProteinMatrix):
         """             
@@ -200,8 +207,14 @@ class SubMatrix:
 
 
 
-    def _func_(self):
-        pass
+    def _init_csr_matrix_(self):
+        """             
+        Purpose:    initializes a csr matrix to use for determining 
+                    connectedness within a cluster
+        Returns:    n/a
+        """
+        self.csr_matrix = csr_matrix(self.protein_matrix.astype(pd.SparseDtype(dtype=float, fill_value=0)))
+        # print(self.csr_matrix)
 
     """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
     * * * * * * * * * * * * * * * GETTERS * * * * * * * * * * * * * * * * *  
@@ -220,7 +233,6 @@ class SubMatrix:
         """
         return self.list_of_all_proteins_in_matrix
     
-    
     def get_interaction(self, protein1: str, protein2: str):
         """             
         Purpose:    to access the interaction values stored in the matrix
@@ -228,18 +240,35 @@ class SubMatrix:
         """
         return self.protein_matrix.loc[protein1, protein2]
 
-    def find_degree(self, protein: str) -> int:
-        """             
-        Parameters: protein the name of a protein
-        Purpose:    to find the degree of a protein
-        Returns:    the degree of the protein
+    def get_num_components_and_labels(self):
         """
-        count = 0
-        for elem in self.protein_matrix.loc[protein]:
-            if elem != 0:
-                count += 1
+        TODO
+        """
+        n_components, labels = connected_components(self.csr_matrix, directed=False, return_labels=True)
+
+        # n_components = connected_components(self.csr_matrix, directed=False, return_labels=False)
+
+        return n_components, labels
+    # def find_degree(self, protein: str) -> int:
+    #     """             
+    #     Parameters: protein the name of a protein
+    #     Purpose:    to find the degree of a protein
+    #     Returns:    the degree of the protein
+    #     """
+    #     count = 0
+    #     for elem in self.protein_matrix.loc[protein]:
+    #         if elem != 0:
+    #             count += 1
         
-        return count
+    #     return count
+
+    
+
+
+
+
+
+
 
 # a : int | str = "hello"
 

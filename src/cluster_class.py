@@ -154,7 +154,7 @@ class ProteinClusters:
         print(f"ERROR! cluster {cluster_number} not found. returning empty cluster")
         return SingleCluster([]) # if no cluster was found, return an empty cluster
     
-    def get_proteins_from_cluster(self, cluster_number: int) -> np.ndarray:
+    def get_cluster_proteins(self, cluster_number: int) -> np.ndarray:
         """             
         Parameters: cluster_number is the number of the cluster to get
         Purpose:    to get the list of proteins from a cluster
