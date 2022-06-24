@@ -88,28 +88,41 @@ class DegreeList:
 
     
     
-    def determine_num_edges_to_cluster(self, protein : str, cluster_list : np.ndarray, max_edges_until_return : int = -1) -> int:
+    def determine_num_edges_to_cluster(self, protein : str, cluster_list : np.array, max_edges_until_return : int = -1, also_return_which_proteins : bool = False) -> int:
         """             
         Parameters: protein is a single protein in the matrix
                     cluster_list is a list of proteins in a cluster
                     max_edges_until_return allows the function to stop counting edges once a certain target is reached
+                    also_return_which_proteins if set to true, will return which proteins have have edges to the given protein. should not be set to true when max_edges is set to a specific value
         Purpose:    to determine the number of edges between the protein and the proteins in the cluster
         Returns:    the number of edges
         """
+        for already_in_cluster in cluster_list:
+            if protein == already_in_cluster:
+                return 0
+        
         num_edges = 0
+        which_proteins = list() 
         # print(cluster_list)
         if max_edges_until_return == -1: # max_edges_until_return has been left unspecified
             for cluster_protein in cluster_list:
+
                 if (self.protein_matrix).has_edge(protein, cluster_protein):
                     num_edges += 1
+                    which_proteins.append(cluster_protein)
         else: # max_edges_until_return has been specified
             for cluster_protein in cluster_list:
+                # print(f"about to call has edge 1")
                 if (self.protein_matrix).has_edge(protein, cluster_protein):
                     num_edges += 1
                 if num_edges >= max_edges_until_return:
                     return num_edges
         
+        
+        if (also_return_which_proteins):
+            return num_edges, which_proteins
         return num_edges
+        
 
 
     def create_list_of_proteins_connected_to_cluster(self, list_of_proteins: np.array, cluster_list : np.array, max_list_length : int = -1, min_num_connections : int = 3) -> list:
@@ -140,6 +153,9 @@ class DegreeList:
         
         return qualifying_proteins
         
+
+    def which_proteins_in_cluster_is_a_protein_connected_to() -> list: # or could be of type numpy.ndarray like 'labels' is
+        pass
 
 
 

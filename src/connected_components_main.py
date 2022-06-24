@@ -21,6 +21,8 @@ def main():
 
     smaller_testing_matrix_file = "../data/testing_data/tiny_dream3.txt"
     testing_matrix_file = "../data/testing_data/small_dream3.txt"
+
+    matrix_file_for_cluster = "../data/testing_data/fake_cluster_dream.txt"
     testing_cluster_file = "../data/testing_data/fake_cluster.txt"
 
     actual_matrix_file = "../data/networks/DREAM_files/dream_2.txt"
@@ -28,17 +30,17 @@ def main():
     actual_cluster_file = "../data/clusters/3344522.7320912.1_ppi_anonym_v2.txt"
 
 
-    matrix = ProteinMatrix(actual_matrix_file)
+    matrix = ProteinMatrix(matrix_file_for_cluster)
     # print(f"Matrix:\n{matrix}")
 
-    clusters = ProteinClusters(actual_cluster_file)
+    clusters = ProteinClusters(testing_cluster_file)
     # print(f"Clusters:\n{clusters}")
     # clusters.print_all()
 
     degreelist = DegreeList(matrix)
     # print(f"Degree list:\n{degreelist}")
 
-
+    
     # want to take a cluster and then make a submatrix. 
     # the submatrix houses the CSR matrix
     for i in range(clusters.get_num_clusters()): # clusters.get_num_clusters()
@@ -46,7 +48,24 @@ def main():
         submatrix = SubMatrix(clusters.get_cluster_proteins(i), matrix)
         # print(submatrix.get_matrix())
         n, labels = submatrix.get_num_components_and_labels()
-        print(f"Cluster {i} has {n} components: {[list((submatrix.get_list_of_proteins())[np.nonzero(labels == i)]) for i in range(n)]}\n")
+        print(f"Cluster {i} has {n} components: {[list((submatrix.get_list_of_proteins())[np.nonzero(labels == i)]) for i in range(n)]}")
+
+    for i in range(clusters.get_num_clusters()):
+        
+        list_of_proteins_connected_to_cluster = degreelist.create_list_of_proteins_connected_to_cluster(degreelist.get_list_of_proteins_sorted_by_degree(), clusters.get_cluster_proteins(i), min_num_connections=3)
+        print(f"proteins connected 3+ times to cluster {i}: {list_of_proteins_connected_to_cluster}")
+
+        
+        for protein in list_of_proteins_connected_to_cluster:
+            
+            # num_connections = degreelist.determine_num_edges_to_cluster(protein, clusters.get_cluster_proteins(i))
+            print(degreelist.determine_num_edges_to_cluster(protein, clusters.get_cluster_proteins(i), also_return_which_proteins=True))
+
+            # print(f"{protein}'s connections to cluster {n}: {}")
+
+    # print(f"proteins with 2 connections to cluster 1: {result}")
+
+    
 
 
 
