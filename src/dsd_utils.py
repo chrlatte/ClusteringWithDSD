@@ -30,8 +30,8 @@ def compute_X_normalized(A,
     e = np.ones((A.shape[0], 1))
 
     # Compute W
-    scale = np.matmul(e.T, np.matmul(D, e))[0, 0]
-    W = np.multiply(1 / scale, np.matmul(e, np.matmul(e.T, D)))
+    scale = np.matmul(e.T, d * e)[0, 0]
+    W = np.multiply(1 / scale, np.matmul(e, (d * e).T))
 
     up_P = np.multiply(lm, P - W)
     X_ = Identity - up_P
@@ -46,10 +46,12 @@ def compute_X_normalized(A,
         return X_i
     
     # Normalize with steady state
-    SS = np.sqrt(np.matmul(D, e))
-    SS = compute_pinverse_diagonal(np.diag(SS.flatten()))
+    SS = np.sqrt(d * e)
+    SS = np.where(SS != 0, 1/SS, 0)
+    #  SS = compute_pinverse_diagonal(np.diag(SS.flatten(
 
-    return np.matmul(X_i, SS)
+    #return np.matmul(X_i, SS)
+    return X_i * SS.T
 
 def compute_dist(X, metric = "euclidean"):
     """
