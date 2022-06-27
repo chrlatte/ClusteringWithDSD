@@ -168,7 +168,16 @@ class DegreeList:
         """
         print(f"cluster labels: {cluster_labels}, proteins w/ connections: {connected_proteins}")
 
+        
         # for each true, store the cluster label (in a set)
+        which_components_were_connected = set()
+        for i in range(len(connected_proteins)):
+            if (connected_proteins[i]):
+                # print(f"protein at [{i}] connected. that protein is in cluster {cluster_labels[i]}")
+                which_components_were_connected.add(cluster_labels[i])
+
+        print(f"went through all connected proteins. there were {len(which_components_were_connected)} components connected to the protein: {which_components_were_connected}")
+
         # then you have the set, if num_elems of the set > 1, success! 
         # 
         # ideally you have num_elems that is = to or very close to the number of components
