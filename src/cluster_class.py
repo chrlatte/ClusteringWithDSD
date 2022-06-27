@@ -20,12 +20,12 @@ class SingleCluster:
     """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
     cluster_number : int = -1
     other_number : float = -1.0
-    proteins_in_cluster : np.ndarray = np.array([], dtype=str)
+    proteins_in_cluster : list() = []
 
     """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
     * * * * * * * * * * * * * * INITIALIZERS * * * * * * * * * * * * * * *  
     """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-    def __init__(self, proteins_in_cluster : np.ndarray):
+    def __init__(self, proteins_in_cluster : list):
         """             
         Parameters: proteins_in_cluster is an np.ndarray where element 0 is the 
                     cluster number, elem 1 is a float, and the rest of the 
@@ -50,6 +50,18 @@ class SingleCluster:
         Returns:    a string representation of the cluster
         """
         return f"Cluster {self.cluster_number} has {len(self.proteins_in_cluster)} proteins: {self.proteins_in_cluster}"
+    
+    def _init_cluster_num_(self, num:int):
+        """
+        TODO
+        """
+        self.cluster_number = num
+
+    def add_protein_to_cluster(self, protein:str):
+        """
+        TODO
+        """
+        self.proteins_in_cluster.append(protein)
         
 
         
@@ -63,7 +75,7 @@ class SingleCluster:
         """
         return int(self.cluster_number)
     
-    def get_protein_list(self) -> np.ndarray:
+    def get_protein_list(self) -> list:
         """             
         Purpose:    to allow access to the list of proteins in a cluster
         Returns:    the list of proteins in the cluster
@@ -108,7 +120,7 @@ class ProteinClusters:
                     self.all_clusters = np.append(self.all_clusters, SingleCluster(line))
 
         except FileNotFoundError:
-            print(f"ERROR! file: {csv_filename} not found. Instance of ProteinClusters could not be initialized")
+            print(f"ERROR! file: {csv_filename} not found.")
 
     def __repr__(self): 
         """             
@@ -117,6 +129,18 @@ class ProteinClusters:
         """
         return f"ProteinClusters has {len(self.all_clusters)} clusters (use the print_all method to see them)"
 
+
+    def add_protein_to_cluster(self, protein:str, cluster_num:int):
+        """             
+        Parameters: 
+            -   protein is the protein to add to a specified cluster
+            -   cluster_num is the num of the cluster to add a protein to
+        Purpose:    to add a protein to a cluster
+        Returns:    n/a
+        """
+        (self.get_cluster(cluster_num)).add_protein_to_cluster(protein)
+
+    
     """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
     * * * * * * * * * * * * * * * GETTERS * * * * * * * * * * * * * * * * *  
     """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
@@ -139,6 +163,10 @@ class ProteinClusters:
             if (self.all_clusters[cluster_number].get_cluster_number() == cluster_number):
             # first: assume clusters were read in in order
                 return self.all_clusters[cluster_number]
+            elif (self.all_clusters[cluster_number].get_cluster_number() == -1):
+                print("empty cluster, YAY")
+                (self.all_clusters[cluster_number])._init_cluster_num_(cluster_number)
+                return self.all_clusters[cluster_number]
             else:
             # possible that clusters were read out of order:
                 for cluster in self.all_clusters:
@@ -152,7 +180,16 @@ class ProteinClusters:
     
         
         print(f"ERROR! cluster {cluster_number} not found. returning empty cluster")
+
+        # TODO: try to access that part of the array. if it has a cluster of number -1 then were good!
+
+
+
+
         return SingleCluster([]) # if no cluster was found, return an empty cluster
+
+
+
     
     def get_cluster_proteins(self, cluster_number: int) -> np.ndarray:
         """             
