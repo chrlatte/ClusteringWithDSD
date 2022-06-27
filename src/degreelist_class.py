@@ -201,11 +201,6 @@ class DegreeList:
                     reconnect are satisfactory.
         Returns:    true if a protein connects >= 2 elements in a cluster
         """
-        
-        # if num_elems of the set > 1, success! 
-        # 
-        # ideally you have num_elems that is = to or very close to the number of components
-
         set_of_components = self.which_components_of_a_cluster_would_a_protein_connect(protein, cluster, cluster_component_labels)
 
         if ((len(set_of_components)) >= min_num_connections):
