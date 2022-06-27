@@ -60,9 +60,14 @@ def main():
         for protein in list_of_proteins_connected_to_cluster:
             
             # num_connections = degreelist.determine_num_edges_to_cluster(protein, clusters.get_cluster_proteins(i))
-            num_edges, list_of_connections = degreelist.determine_num_edges_to_cluster(protein, clusters.get_cluster(i), also_return_which_proteins=True)
+            # num_edges, list_of_connections = degreelist.determine_num_edges_to_cluster(protein, clusters.get_cluster(i), also_return_which_proteins=True)
 
-            will_connect = degreelist.determine_if_a_protein_will_connect_a_cluster(labels, list_of_connections)
+            will_connect = degreelist.determine_if_a_protein_will_connect_a_cluster(protein, clusters.get_cluster(i), labels)
+            
+            if will_connect:
+                print(f"protein {protein} will connect the cluster. it will connect components {degreelist.which_components_of_a_cluster_would_a_protein_connect(protein, clusters.get_cluster(i), labels)}")
+            else:
+                print(f"protein {protein} will not connect cluster.")
 
             
 

@@ -89,14 +89,14 @@ class DegreeList:
 
     
     
-    def determine_num_edges_to_cluster(self, protein : str, cluster_of_proteins : SingleCluster, max_edges_until_return : int = -1, also_return_which_proteins : bool = False) -> int:
+    def determine_num_edges_to_cluster(self, protein : str, cluster_of_proteins : SingleCluster, max_edges_until_return : int = -1, also_return_which_proteins : bool = False) -> int and list:
         """             
         Parameters: protein is a single protein in the matrix
                     cluster_of_proteins is converted to cluster_list, a list of proteins in a cluster
                     max_edges_until_return allows the function to stop counting edges once a certain target is reached
                     also_return_which_proteins if set to true, will return which proteins have have edges to the given protein. should not be set to true when max_edges is set to a specific value
         Purpose:    to determine the number of edges between the protein and the proteins in the cluster
-        Returns:    the number of edges
+        Returns:    the number of edges, and identify_connections: a list of bools in the same order as proteins in the cluster, with true if a the protein is connected, false otherwise
         """
         cluster_list = cluster_of_proteins.get_protein_list()
 
@@ -105,16 +105,16 @@ class DegreeList:
                 return 0
         
         num_edges = 0
-        which_proteins = list() 
         identify_connections = [False for i in range(len(cluster_list))]
-        # print(cluster_list)
+        # which_proteins = list() 
+
         if max_edges_until_return == -1: # max_edges_until_return has been left unspecified
             i = 0
             for cluster_protein in cluster_list:
                 if (self.protein_matrix).has_edge(protein, cluster_protein):
                     num_edges += 1
-                    which_proteins.append(cluster_protein)
                     identify_connections[i] = True
+                    # which_proteins.append(cluster_protein)
                 i += 1
         else: # max_edges_until_return has been specified
             for cluster_protein in cluster_list:
@@ -126,8 +126,8 @@ class DegreeList:
         
         
         if (also_return_which_proteins):
-            # return num_edges, which_proteins
             return num_edges, identify_connections
+            # return num_edges, which_proteins
         return num_edges
         
 
@@ -161,26 +161,55 @@ class DegreeList:
         return qualifying_proteins
         
 
-    def determine_if_a_protein_will_connect_a_cluster(self, cluster_labels : tuple, connected_proteins : list) -> bool: 
+    def which_components_of_a_cluster_would_a_protein_connect(self, protein : str, cluster : SingleCluster, cluster_component_labels : tuple) -> set:
         """
-        - cluster_labels and connected_proteins must be arrays containing the same proteins, where cluster_labels are the labels of which components of a cluster are connected: the output of SubMatrix.get_num_components_and_labels function, and connected_proteins is a list of bools saying whether or not the given protein is connected to the protein at that index of the list of proteins in the cluster. 
-        
+        Parameters: 
+            -   cluster is a cluster containing a group of proteins that are 
+                in some way related
+            -   cluster_component_labels are the labels for each protein. 
+                proteins with the same label are connected to eachother
+        Purpose:    to determine if a protein could re-attach different 
+                    components of a cluster
+        Returns:    a set of the components that would be connected by the 
+                    given protein
         """
-        print(f"cluster labels: {cluster_labels}, proteins w/ connections: {connected_proteins}")
-
-        
-        # for each true, store the cluster label (in a set)
         which_components_were_connected = set()
+
+        # obtain which cluster proteins the given protein is connected to
+        num_edges, connected_proteins = self.determine_num_edges_to_cluster(protein, cluster, also_return_which_proteins = True)
+        
+        # for each protein that was connected, store it's component label
         for i in range(len(connected_proteins)):
             if (connected_proteins[i]):
-                # print(f"protein at [{i}] connected. that protein is in cluster {cluster_labels[i]}")
-                which_components_were_connected.add(cluster_labels[i])
+                which_components_were_connected.add(cluster_component_labels[i])
 
-        print(f"went through all connected proteins. there were {len(which_components_were_connected)} components connected to the protein: {which_components_were_connected}")
+        return which_components_were_connected # type: set
 
-        # then you have the set, if num_elems of the set > 1, success! 
+
+    def determine_if_a_protein_will_connect_a_cluster(self, protein : str, cluster : SingleCluster, cluster_component_labels : tuple, min_num_connections : int = 2) -> bool: 
+        """
+        Parameters: 
+            -   cluster is a cluster containing a group of proteins that are 
+                in some way related
+            -   cluster_component_labels are labels corresponding to a 
+                protein's component within the cluster. connected proteins will 
+                be in the same component.
+            -   min_num_connections is the minimum number of 
+                components that need to be connected for a protein to be 
+                considered successful in connecting a cluster
+        Purpose:    to determine if the components that a protein could 
+                    reconnect are satisfactory.
+        Returns:    true if a protein connects >= 2 elements in a cluster
+        """
+        
+        # if num_elems of the set > 1, success! 
         # 
         # ideally you have num_elems that is = to or very close to the number of components
+
+        set_of_components = self.which_components_of_a_cluster_would_a_protein_connect(protein, cluster, cluster_component_labels)
+
+        if ((len(set_of_components)) >= min_num_connections):
+            return True
 
         return False
 
