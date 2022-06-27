@@ -2,12 +2,14 @@ from sklearn.cluster import SpectralClustering
 import numpy as np
 import sys
 import os
+from tqdm import tqdm
 sys.path.append(os.getcwd())
 
 def recursive_clustering(A, clusters, lower, higher):
     indices_to_cluster = [list(range(A.shape[0]))]
     labels             = {}
     label_count        = 0
+    pbar               = tqdm(total = A.shape[0])
     while(True):
         
         # Break condition
@@ -26,10 +28,13 @@ def recursive_clustering(A, clusters, lower, higher):
                                  else gen_labels[label] + [idmap[i]])
         for l in gen_labels:
             if len(gen_labels[l]) < lower:
+                pbar.update(len(gen_labels[l]))
                 pass
             elif len(gen_labels[l]) > higher:
                 indices_to_cluster.append(gen_labels[l].copy())
             else:
+                pbar.update(len(gen_labels[l]))
                 labels[label_count] = [k for k in gen_labels[l]]
                 label_count        += 1
+    pbar.close()
     return labels
