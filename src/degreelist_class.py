@@ -103,13 +103,16 @@ class DegreeList:
         
         num_edges = 0
         which_proteins = list() 
+        protein_labels = [False for i in range(len(cluster_list))]
         # print(cluster_list)
         if max_edges_until_return == -1: # max_edges_until_return has been left unspecified
+            i = 0
             for cluster_protein in cluster_list:
-
                 if (self.protein_matrix).has_edge(protein, cluster_protein):
                     num_edges += 1
                     which_proteins.append(cluster_protein)
+                    protein_labels[i] = True
+                i += 1
         else: # max_edges_until_return has been specified
             for cluster_protein in cluster_list:
                 # print(f"about to call has edge 1")
@@ -120,7 +123,8 @@ class DegreeList:
         
         
         if (also_return_which_proteins):
-            return num_edges, which_proteins
+            # return num_edges, which_proteins
+            return num_edges, protein_labels
         return num_edges
         
 
