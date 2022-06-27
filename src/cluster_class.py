@@ -26,10 +26,11 @@ class AllClusters:
     * * * * * * * * * * * * * * INITIALIZERS * * * * * * * * * * * * * * *  
     """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 
-    def __init__(self, csv_filename: str, **kwargs):
+    def __init__(self, csv_filename: str = "", protein_to_cluster:dict() = dict(), **kwargs):
         """  
         Parameters: csv_filename is the name of a csv file containing several 
-                    clusters of proteins           
+                    clusters of proteins   
+                    protein_to_cluster        
         Purpose:    to populate several single clusters with data from a CSV 
                     file
         Returns:    n/a
@@ -38,10 +39,9 @@ class AllClusters:
             try:
                 with open(csv_filename, "r") as data:
 
-                    for list_of_proteins in data:
-                        list_of_proteins = list_of_proteins.strip().split("\t")
+                    for item in data:
+                        list_of_proteins = item.strip().split("\t")
 
-                        print(f"test: listofproteins:{list_of_proteins}")
                         cluster_number = list_of_proteins.pop(0)
                         other_number = list_of_proteins.pop(0)
 
@@ -55,7 +55,7 @@ class AllClusters:
         Purpose:    TODO
         Returns:    TODO
         """
-        return f"ProteinClusters has {len(self.clusters)} clusters (use the print_all method to see them)"
+        return f"AllClusters has {len(self.clusters)} clusters (use the print_all method to see them)"
 
 
     def add_protein_to_cluster(self, protein:str, cluster_num:int):
@@ -92,7 +92,7 @@ class AllClusters:
 
     def print_all(self) -> None:
         """             
-        Purpose:    to print all the clusters in the ProteinClusters object
+        Purpose:    to print all the clusters in the dictionary
         Returns:    n/a
         """
         for cluster in self.clusters:
