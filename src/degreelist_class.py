@@ -12,6 +12,7 @@ import pandas as pd
 import numpy as np
 
 from matrix_class import *
+from cluster_class import *
 
 
 
@@ -88,22 +89,24 @@ class DegreeList:
 
     
     
-    def determine_num_edges_to_cluster(self, protein : str, cluster_list : np.array, max_edges_until_return : int = -1, also_return_which_proteins : bool = False) -> int:
+    def determine_num_edges_to_cluster(self, protein : str, cluster_of_proteins : SingleCluster, max_edges_until_return : int = -1, also_return_which_proteins : bool = False) -> int:
         """             
         Parameters: protein is a single protein in the matrix
-                    cluster_list is a list of proteins in a cluster
+                    cluster_of_proteins is converted to cluster_list, a list of proteins in a cluster
                     max_edges_until_return allows the function to stop counting edges once a certain target is reached
                     also_return_which_proteins if set to true, will return which proteins have have edges to the given protein. should not be set to true when max_edges is set to a specific value
         Purpose:    to determine the number of edges between the protein and the proteins in the cluster
         Returns:    the number of edges
         """
+        cluster_list = cluster_of_proteins.get_protein_list()
+
         for already_in_cluster in cluster_list:
             if protein == already_in_cluster:
                 return 0
         
         num_edges = 0
         which_proteins = list() 
-        protein_labels = [False for i in range(len(cluster_list))]
+        identify_connections = [False for i in range(len(cluster_list))]
         # print(cluster_list)
         if max_edges_until_return == -1: # max_edges_until_return has been left unspecified
             i = 0
@@ -111,7 +114,7 @@ class DegreeList:
                 if (self.protein_matrix).has_edge(protein, cluster_protein):
                     num_edges += 1
                     which_proteins.append(cluster_protein)
-                    protein_labels[i] = True
+                    identify_connections[i] = True
                 i += 1
         else: # max_edges_until_return has been specified
             for cluster_protein in cluster_list:
@@ -124,7 +127,7 @@ class DegreeList:
         
         if (also_return_which_proteins):
             # return num_edges, which_proteins
-            return num_edges, protein_labels
+            return num_edges, identify_connections
         return num_edges
         
 
@@ -158,8 +161,19 @@ class DegreeList:
         return qualifying_proteins
         
 
-    def which_proteins_in_cluster_is_a_protein_connected_to() -> list: # or could be of type numpy.ndarray like 'labels' is
-        pass
+    def determine_if_a_protein_will_connect_a_cluster(self, cluster_labels : tuple, connected_proteins : list) -> bool: 
+        """
+        - cluster_labels and connected_proteins must be arrays containing the same proteins, where cluster_labels are the labels of which components of a cluster are connected: the output of SubMatrix.get_num_components_and_labels function, and connected_proteins is a list of bools saying whether or not the given protein is connected to the protein at that index of the list of proteins in the cluster. 
+        
+        """
+        print(f"cluster labels: {cluster_labels}, proteins w/ connections: {connected_proteins}")
+
+        # for each true, store the cluster label (in a set)
+        # then you have the set, if num_elems of the set > 1, success! 
+        # 
+        # ideally you have num_elems that is = to or very close to the number of components
+
+        return False
 
 
 

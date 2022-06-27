@@ -43,26 +43,30 @@ def main():
     
     # want to take a cluster and then make a submatrix. 
     # the submatrix houses the CSR matrix
-    for i in range(clusters.get_num_clusters()): # clusters.get_num_clusters()
+        
+    for i in range(clusters.get_num_clusters()):
+        print("- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - ")
 
         submatrix = SubMatrix(clusters.get_cluster_proteins(i), matrix)
         # print(submatrix.get_matrix())
         n, labels = submatrix.get_num_components_and_labels()
-        print(f"Cluster {i} has {n} components: {[list((submatrix.get_list_of_proteins())[np.nonzero(labels == i)]) for i in range(n)]}")
+        print(f"Cluster {i} has {n} components: {[list((submatrix.get_list_of_proteins())[np.nonzero(labels == i)]) for i in range(n)]}.")
 
-    for i in range(clusters.get_num_clusters()):
         
-        list_of_proteins_connected_to_cluster = degreelist.create_list_of_proteins_connected_to_cluster(degreelist.get_list_of_proteins_sorted_by_degree(), clusters.get_cluster_proteins(i), min_num_connections=3)
+        list_of_proteins_connected_to_cluster = degreelist.create_list_of_proteins_connected_to_cluster(degreelist.get_list_of_proteins_sorted_by_degree(), clusters.get_cluster(i), min_num_connections=3)
         print(f"proteins connected 3+ times to cluster {i}: {list_of_proteins_connected_to_cluster}")
 
         
         for protein in list_of_proteins_connected_to_cluster:
             
             # num_connections = degreelist.determine_num_edges_to_cluster(protein, clusters.get_cluster_proteins(i))
-            print(degreelist.determine_num_edges_to_cluster(protein, clusters.get_cluster_proteins(i), also_return_which_proteins=True))
+            num_edges, list_of_connections = degreelist.determine_num_edges_to_cluster(protein, clusters.get_cluster(i), also_return_which_proteins=True)
+
+            will_connect = degreelist.determine_if_a_protein_will_connect_a_cluster(labels, list_of_connections)
+
+            
 
             # print(f"{protein}'s connections to cluster {n}: {}")
-
     # print(f"proteins with 2 connections to cluster 1: {result}")
 
     
