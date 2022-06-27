@@ -19,7 +19,7 @@ import json
 
 def main():
 
-    clusters = ProteinClusters("")
+    clusters = AllClusters("")
 
     with open("../data/testing_data/cluster_dict.txt","r") as cluster_dict_file:#r - open file in read mode
         dict_of_clusters = json.load(cluster_dict_file)
@@ -27,7 +27,7 @@ def main():
 
         key_list = list([key for key in dict_of_clusters])
 
-        print(key_list)
+        #print(key_list)
 
         for protein in key_list:
             clusters.add_protein_to_cluster(protein, dict_of_clusters[protein])

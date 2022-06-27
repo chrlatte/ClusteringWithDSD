@@ -12,90 +12,15 @@ TODO: code documentation / fxn contracts
 
 import pandas as pd 
 import numpy as np
+from collections import defaultdict
 
-
-class SingleCluster:
-    """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-    * * * * * * * * * * * * * MEMBER VARIABLES * * * * * * * * * * * * * *  
-    """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-    cluster_number : int = -1
-    other_number : float = -1.0
-    proteins_in_cluster : list() = []
-
-    """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-    * * * * * * * * * * * * * * INITIALIZERS * * * * * * * * * * * * * * *  
-    """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-    def __init__(self, proteins_in_cluster : list):
-        """             
-        Parameters: proteins_in_cluster is an np.ndarray where element 0 is the 
-                    cluster number, elem 1 is a float, and the rest of the 
-                    array contains protein names 
-        Purpose:    to initialize a cluster object from a row in the list of 
-                    clusters
-        Returns:    n/a
-        
-        TODO: if the first item is a string, then it is a protein name. if it is an int, then it is a cluster number. may only want to initialize based on whats in the list
-        """
-        try: 
-            self.cluster_number = proteins_in_cluster.pop(0)
-            self.other_number = proteins_in_cluster.pop(0)
-
-            self.proteins_in_cluster = proteins_in_cluster
-        except:
-            print(f"Error while initializing a cluster from array: {proteins_in_cluster}")
-        
-    def __repr__(self): 
-        """             
-        Purpose:    to override the print function for this class
-        Returns:    a string representation of the cluster
-        """
-        return f"Cluster {self.cluster_number} has {len(self.proteins_in_cluster)} proteins: {self.proteins_in_cluster}"
-    
-    def _init_cluster_num_(self, num:int):
-        """
-        TODO
-        """
-        self.cluster_number = num
-
-    def add_protein_to_cluster(self, protein:str):
-        """
-        TODO
-        """
-        self.proteins_in_cluster.append(protein)
-        
-
-        
-    """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-    * * * * * * * * * * * * * * * GETTERS * * * * * * * * * * * * * * * * *  
-    """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-    def get_cluster_number(self) -> int:
-        """             
-        Purpose:    to allow access to the cluster number
-        Returns:    the cluster number
-        """
-        return int(self.cluster_number)
-    
-    def get_protein_list(self) -> list:
-        """             
-        Purpose:    to allow access to the list of proteins in a cluster
-        Returns:    the list of proteins in the cluster
-        """
-        return self.proteins_in_cluster
-    
-
-
-class ProteinClusters:
+class AllClusters:
 
     """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
     * * * * * * * * * * * * * MEMBER VARIABLES * * * * * * * * * * * * * *  
     """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-    # protein_data_df = pd.DataFrame
-    # list_of_all_proteins_in_matrix = np.array
-    # protein_indexes = dict()
-    # protein_matrix = pd.DataFrame()
-    
-    all_clusters = np.array([], dtype=SingleCluster)
 
+    clusters = defaultdict(lambda : []) # a dict of relation {cluster_num : list_of_proteins_in_cluster}
 
     """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
     * * * * * * * * * * * * * * INITIALIZERS * * * * * * * * * * * * * * *  
@@ -109,25 +34,28 @@ class ProteinClusters:
                     file
         Returns:    n/a
         """
-        try:
-            # for each line in the file, get that line, and split it into a 
-            # list. give that list to the SingleCluster constructor. add that 
-            # singlecluster to the list of all clusters
-            with open(csv_filename, "r") as data:
-                for line in data:
-                    line = line.strip().split("\t")
-                    # cluster = SingleCluster(line)
-                    self.all_clusters = np.append(self.all_clusters, SingleCluster(line))
+        if (csv_filename != ""):
+            try:
+                with open(csv_filename, "r") as data:
 
-        except FileNotFoundError:
-            print(f"ERROR! file: {csv_filename} not found.")
+                    for list_of_proteins in data:
+                        list_of_proteins = list_of_proteins.strip().split("\t")
+
+                        print(f"test: listofproteins:{list_of_proteins}")
+                        cluster_number = list_of_proteins.pop(0)
+                        other_number = list_of_proteins.pop(0)
+
+                        self.clusters[cluster_number] = list_of_proteins
+
+            except FileNotFoundError:
+                print(f"ERROR! file: {csv_filename} not found.")
 
     def __repr__(self): 
         """             
         Purpose:    TODO
         Returns:    TODO
         """
-        return f"ProteinClusters has {len(self.all_clusters)} clusters (use the print_all method to see them)"
+        return f"ProteinClusters has {len(self.clusters)} clusters (use the print_all method to see them)"
 
 
     def add_protein_to_cluster(self, protein:str, cluster_num:int):
@@ -138,73 +66,28 @@ class ProteinClusters:
         Purpose:    to add a protein to a cluster
         Returns:    n/a
         """
-        (self.get_cluster(cluster_num)).add_protein_to_cluster(protein)
+        self.clusters[cluster_num].append(protein)
+        print(f"appended cluster {cluster_num}: {self.clusters[cluster_num]}")
 
     
     """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
     * * * * * * * * * * * * * * * GETTERS * * * * * * * * * * * * * * * * *  
     """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-    def get_cluster(self, cluster_number: int) -> SingleCluster:
-        """             
-        Parameters: cluster_number is the number of the cluster to get
-        Purpose:    to get a cluster from the list of all clusters
-        Returns:    the cluster with the given number
-        """
-        
-        # print(f"get cluster called. printing self.all_clusters: {self.all_clusters}")
 
-        # print(f"looking for cluster number: {cluster_number}")
-        # print(f"self.all_clusters[cluster_number] is {self.all_clusters[cluster_number]}. it's cluster number is {(self.all_clusters[cluster_number]).get_cluster_number()}")
-
-
-        #print(self.all_clusters[cluster_number].get_cluster_number())
-        # print(f"comparing {type(cluster_number)} to {type(self.all_clusters[cluster_number].get_cluster_number())}")
-        try:
-            if (self.all_clusters[cluster_number].get_cluster_number() == cluster_number):
-            # first: assume clusters were read in in order
-                return self.all_clusters[cluster_number]
-            elif (self.all_clusters[cluster_number].get_cluster_number() == -1):
-                print("empty cluster, YAY")
-                (self.all_clusters[cluster_number])._init_cluster_num_(cluster_number)
-                return self.all_clusters[cluster_number]
-            else:
-            # possible that clusters were read out of order:
-                for cluster in self.all_clusters:
-                    if (cluster.get_cluster_number() == cluster_number):
-                        return cluster
-        except IndexError:
-            print(f"ERROR! cluster number {cluster_number} out of bounds. searching for it anyways")
-            for cluster in self.all_clusters:
-                if (cluster.get_cluster_number() == cluster_number):
-                    return cluster
-    
-        
-        print(f"ERROR! cluster {cluster_number} not found. returning empty cluster")
-
-        # TODO: try to access that part of the array. if it has a cluster of number -1 then were good!
-
-
-
-
-        return SingleCluster([]) # if no cluster was found, return an empty cluster
-
-
-
-    
-    def get_cluster_proteins(self, cluster_number: int) -> np.ndarray:
+    def get_cluster_proteins(self, cluster_number: int) -> list:
         """             
         Parameters: cluster_number is the number of the cluster to get
         Purpose:    to get the list of proteins from a cluster
         Returns:    the list of proteins in the cluster
         """
-        return self.get_cluster(cluster_number).get_protein_list()
+        return self.clusters[cluster_number]
 
     def get_num_clusters(self) -> int:
         """
         Purpose:    to determine the number of clusters
         Returns:    
         """
-        return len(self.all_clusters)
+        return len(self.clusters)
 
 
     def print_all(self) -> None:
@@ -212,5 +95,5 @@ class ProteinClusters:
         Purpose:    to print all the clusters in the ProteinClusters object
         Returns:    n/a
         """
-        for cluster in self.all_clusters:
-            print(cluster)
+        for cluster in self.clusters:
+            print(f"{cluster}: {self.get_cluster_proteins(cluster)}")
