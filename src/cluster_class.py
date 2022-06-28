@@ -26,7 +26,7 @@ class AllClusters:
     * * * * * * * * * * * * * * INITIALIZERS * * * * * * * * * * * * * * *  
     """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 
-    def __init__(self, csv_filename : str = "", protein_to_cluster_dict : dict() = {}) -> None:
+    def __init__(self, csv_filename: str = "", protein_to_cluster_dict: dict() ={}) -> None:
         """  
         Parameters: csv_filename is the name of a csv file containing several 
                     clusters of proteins   
@@ -42,7 +42,7 @@ class AllClusters:
                     for item in data:
                         list_of_proteins = item.strip().split("\t")
 
-                        cluster_number = list_of_proteins.pop(0)
+                        cluster_number = int(list_of_proteins.pop(0))
                         other_number = list_of_proteins.pop(0)
 
                         self.clusters[cluster_number] = list_of_proteins
@@ -91,6 +91,7 @@ class AllClusters:
         Purpose:    to get the list of proteins from a cluster
         Returns:    the list of proteins in the cluster
         """
+
         return self.clusters[cluster_number]
 
     def get_num_clusters(self) -> int:
@@ -106,5 +107,7 @@ class AllClusters:
         Purpose:    to print all the clusters in the dictionary
         Returns:    n/a
         """
-        for cluster in self.clusters:
-            print(f"{cluster}: {self.get_cluster_proteins(cluster)}")
+        print(self.clusters.keys())
+        
+        for cluster_key in self.clusters.keys():
+            print(f"Cluster {cluster_key}: {self.get_cluster_proteins(cluster_key)}")

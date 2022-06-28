@@ -161,7 +161,7 @@ class SubMatrix:
     """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
     * * * * * * * * * * * * * * INITIALIZERS * * * * * * * * * * * * * * *  
     """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-    def __init__(self, proteins_to_map : np.array, original_matrix : ProteinMatrix):
+    def __init__(self, proteins_to_map : list, original_matrix : ProteinMatrix):
         """            
         Parameters: 
             -   proteins_to_map: a subset of proteins in the original matrix 
@@ -171,8 +171,11 @@ class SubMatrix:
                     matrix. 
         Returns:    n/a
         """
+        # print(f"initializing submatrix from {proteins_to_map}. the unique proteins are: {list(set(proteins_to_map))}")
         # initialize list of proteins:
-        self.list_of_all_proteins_in_matrix = np.unique(proteins_to_map)
+        self.list_of_all_proteins_in_matrix = list(set(proteins_to_map))
+
+        
         # inititalize matrix:
         self._init_matrix(original_matrix)
         self._init_csr_matrix_()
