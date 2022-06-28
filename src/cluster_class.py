@@ -20,8 +20,8 @@ class AllClusters:
     * * * * * * * * * * * * * MEMBER VARIABLES * * * * * * * * * * * * * *  
     """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 
-    clusters = defaultdict(lambda : []) # a dict of relation {cluster_num : list_of_proteins_in_cluster}
-
+    clusters = defaultdict(lambda: []) # a dict of relation {cluster_num : list_of_proteins_in_cluster}
+    
     """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
     * * * * * * * * * * * * * * INITIALIZERS * * * * * * * * * * * * * * *  
     """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
@@ -52,8 +52,8 @@ class AllClusters:
         
         elif protein_to_cluster_dict: # dictionary not empty
             # print("non-empty dictionary given!!")
-            for protein in protein_to_cluster_dict:
-                self.add_protein_to_cluster(protein, protein_to_cluster_dict[protein])
+            for protein in protein_to_cluster_dict.keys():
+                self.add_protein_to_cluster(protein, int(protein_to_cluster_dict[protein]))
             
 
         
@@ -109,5 +109,5 @@ class AllClusters:
         """
         print(self.clusters.keys())
         
-        for cluster_key in self.clusters.keys():
-            print(f"Cluster {cluster_key}: {self.get_cluster_proteins(cluster_key)}")
+        for cluster_num in self.clusters.keys():
+            print(f"Cluster {cluster_num}: {self.get_cluster_proteins(cluster_num)}")
