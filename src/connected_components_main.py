@@ -29,7 +29,7 @@ def main():
 
     
 
-    # matrix = ProteinMatrix(actual_matrix_file)
+    matrix = ProteinMatrix(actual_matrix_file)
     # print(f"Matrix:\n{matrix}")
 
 
@@ -37,39 +37,39 @@ def main():
     # convert actual cluster file to a dictionary!!
     with open(actual_cluster_file,"r") as cluster_dict_file:
         dict_of_clusters = json.load(cluster_dict_file)
-        
+    
     clusters = AllClusters("", dict_of_clusters)
-    # print(f"Clusters:\n{clusters}")
-    clusters.print_all()
+    # # print(f"Clusters:\n{clusters}")
+    # clusters.print_all()
 
-    # degreelist = DegreeList(matrix)
+    degreelist = DegreeList(matrix)
     # print(f"Degree list:\n{degreelist}")
 
  
     
 
-    # for i in range(clusters.get_num_clusters()):
+    for i in range(clusters.get_num_clusters()):
 
-    #     print("- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - ")
+        print("- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - ")
 
-    #     submatrix = SubMatrix(clusters.get_cluster_proteins(i), matrix)
-    #     # print(f"SUBMATRIX FROM CLUSTER {i}: \n{submatrix.get_matrix()}")
-    #     n, labels = submatrix.get_num_components_and_labels()
-    #     print(f"Cluster {i} has {n} components: {[list(np.array(submatrix.get_list_of_proteins())[np.nonzero(labels == i)]) for i in range(n)]}.")
+        submatrix = SubMatrix(clusters.get_cluster_proteins(i), matrix)
+        # print(f"SUBMATRIX FROM CLUSTER {i}: \n{submatrix.get_matrix()}")
+        n, labels = submatrix.get_num_components_and_labels()
+        print(f"Cluster {i} has {n} components: {[list(np.array(submatrix.get_list_of_proteins())[np.nonzero(labels == i)]) for i in range(n)]}.")
         
-    #     list_of_proteins_connected_to_cluster = degreelist.create_list_of_proteins_connected_to_cluster(degreelist.get_list_of_proteins_sorted_by_degree(), clusters.get_cluster_proteins(i), min_num_connections=3)
+        list_of_proteins_connected_to_cluster = degreelist.create_list_of_proteins_connected_to_cluster(degreelist.get_list_of_proteins_sorted_by_degree(), clusters.get_cluster_proteins(i), min_num_connections=3)
 
-    #     print(f"proteins connected 3+ times to cluster {i}: {list_of_proteins_connected_to_cluster}")
+        print(f"proteins connected 3+ times to cluster {i}: {list_of_proteins_connected_to_cluster}")
 
         
-    #     for protein in list_of_proteins_connected_to_cluster:
+        for protein in list_of_proteins_connected_to_cluster:
 
-    #         will_connect = degreelist.determine_if_a_protein_will_connect_a_cluster(protein, clusters.get_cluster_proteins(i), labels)
+            will_connect = degreelist.determine_if_a_protein_will_connect_a_cluster(protein, clusters.get_cluster_proteins(i), labels)
             
-    #         if will_connect:
-    #             print(f"protein {protein} will connect components {degreelist.which_components_of_a_cluster_would_a_protein_connect(protein, clusters.get_cluster_proteins(i), labels)}")
-    #         else:
-    #             print(f"{protein} will not connect cluster.")
+            if will_connect:
+                print(f"protein {protein} will connect components {degreelist.which_components_of_a_cluster_would_a_protein_connect(protein, clusters.get_cluster_proteins(i), labels)}")
+            else:
+                print(f"{protein} will not connect cluster.")
 
 
 
