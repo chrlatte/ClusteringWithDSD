@@ -26,16 +26,16 @@ class AllClusters:
     * * * * * * * * * * * * * * INITIALIZERS * * * * * * * * * * * * * * *  
     """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 
-    def __init__(self, csv_filename: str = "", protein_to_cluster:dict() = dict(), **kwargs):
+    def __init__(self, csv_filename : str = "", protein_to_cluster_dict : dict() = {}) -> None:
         """  
         Parameters: csv_filename is the name of a csv file containing several 
                     clusters of proteins   
-                    protein_to_cluster        
+                    protein_to_cluster_dict is a dictionary with the form { protein : cluster_num }
         Purpose:    to populate several single clusters with data from a CSV 
-                    file
+                    file, or from a dictionary
         Returns:    n/a
         """
-        if (csv_filename != ""):
+        if csv_filename != "":
             try:
                 with open(csv_filename, "r") as data:
 
@@ -49,6 +49,17 @@ class AllClusters:
 
             except FileNotFoundError:
                 print(f"ERROR! file: {csv_filename} not found.")
+        
+        elif protein_to_cluster_dict: # dictionary not empty
+            # print("non-empty dictionary given!!")
+            for protein in protein_to_cluster_dict:
+                self.add_protein_to_cluster(protein, protein_to_cluster_dict[protein])
+            
+
+        
+
+
+
 
     def __repr__(self): 
         """             
@@ -67,7 +78,7 @@ class AllClusters:
         Returns:    n/a
         """
         self.clusters[cluster_num].append(protein)
-        print(f"appended cluster {cluster_num}: {self.clusters[cluster_num]}")
+        # print(f"appended cluster {cluster_num}: {self.clusters[cluster_num]}")
 
     
     """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
