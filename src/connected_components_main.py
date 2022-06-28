@@ -24,21 +24,23 @@ def main():
     testing_matrix_file = "../data/testing_data/fake_cluster_dream.txt"
     testing_cluster_file = "../data/testing_data/fake_cluster.txt"
 
-    actual_matrix_file = "../data/networks/DREAM_files/dream_3.txt"
-    actual_cluster_file = "../data/results/DREAM-3-cc/d3_5_100.json-cluster.json"
+    dream3_matrix_file = "../data/networks/DREAM_files/dream_3.txt"
+    dream3_cluster_file = "../data/results/DREAM-3-cc/d3_5_100.json-cluster.json"
 
-    
+    dream2_matrix_file = "../data/networks/DREAM_files/dream_2.txt"
+    dream3_old_cluster_file = "../data/clusters/3344522.7320912.1_ppi_anonym_v2.txt"
 
-    matrix = ProteinMatrix(actual_matrix_file)
+
+    matrix = ProteinMatrix(dream2_matrix_file)
     # print(f"Matrix:\n{matrix}")
 
 
-    dict_of_clusters = {}
-    # convert actual cluster file to a dictionary!!
-    with open(actual_cluster_file,"r") as cluster_dict_file:
-        dict_of_clusters = json.load(cluster_dict_file)
+    # dict_of_clusters = {}
+    # # convert actual cluster file to a dictionary!!
+    # with open(,"r") as cluster_dict_file:
+    #     dict_of_clusters = json.load(cluster_dict_file)
     
-    clusters = AllClusters("", dict_of_clusters)
+    clusters = AllClusters(dream3_old_cluster_file)
     # # print(f"Clusters:\n{clusters}")
     # clusters.print_all()
 
@@ -67,7 +69,8 @@ def main():
             will_connect = degreelist.determine_if_a_protein_will_connect_a_cluster(protein, clusters.get_cluster_proteins(i), labels)
             
             if will_connect:
-                print(f"protein {protein} will connect components {degreelist.which_components_of_a_cluster_would_a_protein_connect(protein, clusters.get_cluster_proteins(i), labels)}")
+                which_components = degreelist.which_components_of_a_cluster_would_a_protein_connect(protein, clusters.get_cluster_proteins(i), labels)
+                print(f"protein {protein} has degree {matrix.find_degree(protein)} and will connect {len(which_components)} components: {which_components}")
             else:
                 print(f"{protein} will not connect cluster.")
 

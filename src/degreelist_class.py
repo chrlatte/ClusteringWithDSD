@@ -87,6 +87,20 @@ class DegreeList:
             return self.sorted_protein_degree_dict[index]
     
 
+    # def get_degree_of_protein(self, protein: str) -> int:
+    #     """
+    #     Parameters: 
+    #         -   protein is the name of a protein whose degree should be determined
+    #     Purpose:    to determine how well-connected a given protein is
+    #     Returns:    protein's degree
+    #     """
+    #     try:
+    #         degree = self.sorted_protein_degree_dict[protein]
+    #         return degree
+    #     except KeyError:
+    #         print(f"get_degree_of_protein({protein}) caused an error because {protein} is not in the degreelist dictionary. returning -1")
+    #         return -1
+
     
     
     def determine_num_edges_to_cluster(self, protein : str, cluster_of_proteins : list(), max_edges_until_return : int = -1, also_return_which_proteins : bool = False) -> int and list:
