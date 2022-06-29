@@ -16,21 +16,17 @@ from cytoscape_print_class import *
 def main():
 
     testing_matrix_file = "../data/testing_data/fake_cluster_dream.txt"
-    # dream3_matrix_file = "../data/networks/DREAM_files/dream_3.txt"
-
-    matrix = ProteinMatrix(testing_matrix_file)
+    testing_cluster_file = "../data/testing_data/fake_cluster.txt"
     
+    matrix = ProteinMatrix(testing_matrix_file)
+    clusters = AllClusters(testing_cluster_file)
 
-    sif = PrintToFile()
+    foo = PrintToFile()
 
-    sif.clear_file()
-    sif.print_matrix(matrix)
+    
+    foo.print_all_interactions(matrix)
+    foo.assign_colors_to_clusters(clusters)
 
-    sif.swap_file("cytoscape_colors.txt")
-    sif.clear_file()
-
-    sif.assign_colors_to_clusters(["C0P1", "C1P1", "C2P1"])
-    sif.assign_colors_to_clusters(["C0P2", "C1P2", "C2P2"])
 
 
 
