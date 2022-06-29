@@ -97,7 +97,21 @@ class ProteinMatrix:
         """
         
         return self.list_of_all_proteins_in_matrix
-        
+    
+
+    def get_list_of_proteins_connected_to_protein(self, protein1: str) -> list:
+        """
+        Parameters: protein1 is a protein of interest
+        Purpose:    to create a list of proteins connected to the given protein
+        """
+        connections = list()
+        for protein2 in self.get_list_of_proteins():
+
+            if self.protein_matrix[protein1][protein2]:
+                connections.append(protein2)
+        return connections
+
+
     def get_interaction(self, protein1: str, protein2: str):
         """             
         Purpose:    to access the interaction values stored in the matrix
@@ -236,6 +250,22 @@ class SubMatrix:
         """
         return self.list_of_all_proteins_in_matrix
     
+
+    def get_list_of_proteins_connected_to_protein(self, protein1: str) -> list:
+        """
+        Parameters: protein1 is a protein of interest
+        Purpose:    to create a list of proteins connected to the given protein
+        """
+        connections = list()
+        for protein2 in self.get_list_of_proteins():
+
+            if self.protein_matrix[protein1][protein2]:
+                connections.append(protein2)
+        
+        return connections
+
+
+
     def get_interaction(self, protein1: str, protein2: str):
         """             
         Purpose:    to access the interaction values stored in the matrix

@@ -103,7 +103,7 @@ class DegreeList:
 
     
     
-    def determine_num_edges_to_cluster(self, protein : str, cluster_of_proteins : list(), max_edges_until_return : int = -1, also_return_which_proteins : bool = False) -> int and list:
+    def determine_num_edges_to_cluster(self, protein : str, cluster_of_proteins : list(), max_edges_until_return : int = -1, also_return_which_proteins: bool = False) -> int and list:
         """             
         Parameters: protein is a single protein in the matrix
                     cluster_of_proteins is converted to cluster_list, a list of proteins in a cluster
@@ -145,7 +145,7 @@ class DegreeList:
         
 
 
-    def create_list_of_proteins_connected_to_cluster(self, list_of_proteins: np.array, cluster_list : np.array, max_list_length : int = -1, min_num_connections : int = 3) -> list:
+    def create_list_of_proteins_connected_to_cluster(self, list_of_proteins: np.array, cluster_list: np.array, max_list_length: int = -1, min_num_connections: int = 3) -> list:
         """             
         Parameters: cluster_list is a list of proteins in a cluster
                     max_list_length is an upper bound for the number of proteins to return in a list. If None, all proteins with at least min_num_connections connections are added to the list

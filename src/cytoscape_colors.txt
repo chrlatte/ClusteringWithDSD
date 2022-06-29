@@ -1,0 +1,7 @@
+name color
+C0P1 0
+C1P1 0
+C2P1 0
+C0P2 1
+C1P2 1
+C2P2 1
