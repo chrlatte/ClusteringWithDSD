@@ -23,8 +23,8 @@ def main():
 
 
     
-    matrix = ProteinMatrix(dream3_matrix_file)
-    clusters = AllClusters(dream3_old_cluster_file)
+    matrix = ProteinMatrix(testing_matrix_file)
+    clusters = AllClusters(testing_cluster_file)
 
     foo = PrintToFile()
 

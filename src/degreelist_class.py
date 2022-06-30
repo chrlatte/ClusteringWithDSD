@@ -118,16 +118,14 @@ class DegreeList:
                 return 0
         
         num_edges = 0
-        identify_connections = [False for i in range(len(cluster_of_proteins))]
-        # which_proteins = list() 
+        which_proteins = list() 
 
         if max_edges_until_return == -1: # max_edges_until_return has been left unspecified
             i = 0
             for cluster_protein in cluster_of_proteins:
                 if (self.protein_matrix).has_edge(protein, cluster_protein):
                     num_edges += 1
-                    identify_connections[i] = True
-                    # which_proteins.append(cluster_protein)
+                    which_proteins.append(cluster_protein)
                 i += 1
         else: # max_edges_until_return has been specified
             for cluster_protein in cluster_of_proteins:
@@ -139,8 +137,7 @@ class DegreeList:
         
         
         if (also_return_which_proteins):
-            return num_edges, identify_connections
-            # return num_edges, which_proteins
+            return num_edges, which_proteins
         return num_edges
         
 
@@ -155,6 +152,7 @@ class DegreeList:
         """
         
         qualifying_proteins = []
+
         if max_list_length == -1: # max_list_length left unspecified
             for protein in list_of_proteins:
                 num_edges = self.determine_num_edges_to_cluster(protein, cluster_list, max_edges_until_return=min_num_connections)
@@ -174,13 +172,12 @@ class DegreeList:
         return qualifying_proteins
         
 
-    def which_components_of_a_cluster_would_a_protein_connect(self, protein : str, cluster_of_proteins, cluster_component_labels : tuple) -> set:
+    def which_components_of_a_cluster_would_a_protein_connect(self, protein: str, cluster_of_proteins, protein_to_component_dict: dict()) -> set:
         """
         Parameters: 
             -   cluster is a cluster containing a group of proteins that are 
                 in some way related
-            -   cluster_component_labels are the labels for each protein. 
-                proteins with the same label are connected to eachother
+            -   TODO
         Purpose:    to determine if a protein could re-attach different 
                     components of a cluster
         Returns:    a set of the components that would be connected by the 
@@ -190,23 +187,27 @@ class DegreeList:
 
         # obtain which cluster proteins the given protein is connected to
         num_edges, connected_proteins = self.determine_num_edges_to_cluster(protein, cluster_of_proteins, also_return_which_proteins = True)
+
+        
         
         # for each protein that was connected, store it's component label
-        for i in range(len(connected_proteins)):
-            if (connected_proteins[i]):
-                which_components_were_connected.add(cluster_component_labels[i])
+        # print(f"connected proteins: {connected_proteins}. labels: {protein_to_component_dict}")
+        for protein in connected_proteins:
+            try:
+                which_components_were_connected.add(protein_to_component_dict[protein])
+            except KeyError:
+                pass
+                # print(f"adding the following label {cluster_component_labels[i]}")
 
         return which_components_were_connected # type: set
 
 
-    def determine_if_a_protein_will_connect_a_cluster(self, protein : str, cluster_of_proteins : list(), cluster_component_labels : tuple, min_num_connections : int = 2) -> bool: 
+    def determine_if_a_protein_will_connect_a_cluster(self, protein: str, cluster_of_proteins: list(), protein_to_component_dict: dict(), min_num_connections: int = 2) -> bool: 
         """
         Parameters: 
             -   cluster is a cluster containing a group of proteins that are 
                 in some way related
-            -   cluster_component_labels are labels corresponding to a 
-                protein's component within the cluster. connected proteins will 
-                be in the same component.
+            -   TODO -> dict
             -   min_num_connections is the minimum number of 
                 components that need to be connected for a protein to be 
                 considered successful in connecting a cluster
@@ -214,7 +215,7 @@ class DegreeList:
                     reconnect are satisfactory.
         Returns:    true if a protein connects >= 2 elements in a cluster
         """
-        set_of_components = self.which_components_of_a_cluster_would_a_protein_connect(protein, cluster_of_proteins, cluster_component_labels)
+        set_of_components = self.which_components_of_a_cluster_would_a_protein_connect(protein, cluster_of_proteins, protein_to_component_dict)
 
         if ((len(set_of_components)) >= min_num_connections):
             return True

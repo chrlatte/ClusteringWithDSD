@@ -8,15 +8,16 @@ Purpose: a main to use the scipy library to determine connected components in a 
 
 """
 
-from matrix_class import *
-from cluster_class import *
-from degreelist_class import *
+import numpy as np
 
-import json 
+from matrix_class import ProteinMatrix
+from matrix_class import SubMatrix
+from cluster_class import AllClusters
+from degreelist_class import DegreeList
 
-# from scipy.sparse import coo_matrix
-# from scipy.sparse import csr_matrix
-# from scipy.sparse.csgraph import connected_components
+
+from connected_components_utils import *
+
 
 
 def main():
@@ -31,7 +32,7 @@ def main():
     dream3_old_cluster_file = "../data/clusters/3344522.7320912.1_ppi_anonym_v2.txt"
 
 
-    matrix = ProteinMatrix(dream2_matrix_file)
+    matrix = ProteinMatrix(testing_matrix_file)
     # print(f"Matrix:\n{matrix}")
 
 
@@ -40,7 +41,7 @@ def main():
     # with open(,"r") as cluster_dict_file:
     #     dict_of_clusters = json.load(cluster_dict_file)
     
-    clusters = AllClusters(dream3_old_cluster_file)
+    clusters = AllClusters(testing_cluster_file)
     # # print(f"Clusters:\n{clusters}")
     # clusters.print_all()
 
@@ -50,31 +51,11 @@ def main():
  
     
 
-    for i in range(clusters.get_num_clusters()):
+    # print_cluster_components_and_proteins_that_are_connected(matrix, clusters, degreelist)
+    # clusters.get_cluster_proteins(0) # TODO is empty
 
-        print("- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - ")
-
-        submatrix = SubMatrix(clusters.get_cluster_proteins(i), matrix)
-        # print(f"SUBMATRIX FROM CLUSTER {i}: \n{submatrix.get_matrix()}")
-        n, labels = submatrix.get_num_components_and_labels()
-        print(f"Cluster {i} has {n} components: {[list(np.array(submatrix.get_list_of_proteins())[np.nonzero(labels == i)]) for i in range(n)]}.")
-        
-        list_of_proteins_connected_to_cluster = degreelist.create_list_of_proteins_connected_to_cluster(degreelist.get_list_of_proteins_sorted_by_degree(), clusters.get_cluster_proteins(i), min_num_connections=3)
-
-        print(f"proteins connected 3+ times to cluster {i}: {list_of_proteins_connected_to_cluster}")
-
-        
-        for protein in list_of_proteins_connected_to_cluster:
-
-            will_connect = degreelist.determine_if_a_protein_will_connect_a_cluster(protein, clusters.get_cluster_proteins(i), labels)
-            
-            if will_connect:
-                which_components = degreelist.which_components_of_a_cluster_would_a_protein_connect(protein, clusters.get_cluster_proteins(i), labels)
-                print(f"protein {protein} has degree {matrix.find_degree(protein)} and will connect {len(which_components)} components: {which_components}")
-            else:
-                print(f"{protein} will not connect cluster.")
-
-
+    
+    print_all_clusters_and_connected_proteins(matrix, clusters, degreelist)
 
 if __name__ == "__main__":
     main()
