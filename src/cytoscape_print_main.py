@@ -17,9 +17,14 @@ def main():
 
     testing_matrix_file = "../data/testing_data/fake_cluster_dream.txt"
     testing_cluster_file = "../data/testing_data/fake_cluster.txt"
+
+    dream3_matrix_file = "../data/networks/DREAM_files/dream_3.txt"
+    dream3_old_cluster_file = "../data/clusters/3344522.7320912.1_ppi_anonym_v2.txt"
+
+
     
-    matrix = ProteinMatrix(testing_matrix_file)
-    clusters = AllClusters(testing_cluster_file)
+    matrix = ProteinMatrix(dream3_matrix_file)
+    clusters = AllClusters(dream3_old_cluster_file)
 
     foo = PrintToFile()
 
