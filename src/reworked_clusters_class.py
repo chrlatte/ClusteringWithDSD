@@ -84,11 +84,33 @@ class ClusterInspection:
             self.print_single_cluster_and_connected_proteins(x)
 
 
-    def find_clusters_that_match_criteria(self) -> list():
+    def find_clusters_that_match_criteria(self, ratio: float = 1/2, b: int = 0) -> list():
         """
         TODO
+        num_components must be less than ratio*num_proteins + b 
+        with a smaller ratio, or a lower b, the qualifying clusters will be more connected
         """
-        pass
+        clusters_that_match_criteria = list # list of nums
+
+        for x in range(self.clusters.get_num_clusters()):
+
+            submatrix = SubMatrix(self.clusters.get_cluster_proteins(x), self.matrix)
+            num_components, labels = submatrix.get_num_components_and_labels()
+            num_proteins = len(submatrix.get_list_of_proteins())
+
+            
+
+            if (ratio*num_proteins + b) > num_components:
+                # print(f"cluster {x} meets criteria!! {num_components} components and {num_proteins} proteins")
+                clusters_that_match_criteria.append(x)
+
+            # else:
+            #     print(f"cluster {x} has {num_components} components and {num_proteins} proteins")
+        
+        print(clusters_that_match_criteria)
+        return clusters_that_match_criteria
+        
+
 
     def find_proteins_that_match_criteria(self, x: int) -> list():
         """

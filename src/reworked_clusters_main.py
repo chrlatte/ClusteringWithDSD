@@ -52,7 +52,9 @@ def main():
 
     foo = ClusterInspection(matrix, clusters, degreelist)
 
-    foo.print_all_clusters_and_connected_proteins()
+    #foo.print_all_clusters_and_connected_proteins()
+
+    foo.find_clusters_that_match_criteria(ratio = 1, b = 0)
  
     
 if __name__ == "__main__":
