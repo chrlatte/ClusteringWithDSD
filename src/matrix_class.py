@@ -90,14 +90,28 @@ class ProteinMatrix:
         """
         return self.protein_matrix
     
-    def get_list_of_proteins(self) -> np.array:
+    def get_list_of_proteins(self) -> list:
         """             
         Purpose:    to access the list of all proteins in the matrix
         Returns:    an array of all proteins in the matrix
         """
         
         return self.list_of_all_proteins_in_matrix
-        
+    
+
+    def get_list_of_proteins_connected_to_protein(self, protein1: str) -> list:
+        """
+        Parameters: protein1 is a protein of interest
+        Purpose:    to create a list of proteins connected to the given protein
+        """
+        connections = list()
+        for protein2 in self.get_list_of_proteins():
+
+            if self.protein_matrix[protein1][protein2]:
+                connections.append(protein2)
+        return connections
+
+
     def get_interaction(self, protein1: str, protein2: str):
         """             
         Purpose:    to access the interaction values stored in the matrix
@@ -161,7 +175,7 @@ class SubMatrix:
     """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
     * * * * * * * * * * * * * * INITIALIZERS * * * * * * * * * * * * * * *  
     """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-    def __init__(self, proteins_to_map : np.array, original_matrix : ProteinMatrix):
+    def __init__(self, proteins_to_map : list, original_matrix : ProteinMatrix):
         """            
         Parameters: 
             -   proteins_to_map: a subset of proteins in the original matrix 
@@ -171,8 +185,11 @@ class SubMatrix:
                     matrix. 
         Returns:    n/a
         """
+        # print(f"initializing submatrix from {proteins_to_map}. the unique proteins are: {list(set(proteins_to_map))}")
         # initialize list of proteins:
-        self.list_of_all_proteins_in_matrix = np.unique(proteins_to_map)
+        self.list_of_all_proteins_in_matrix = list(set(proteins_to_map))
+
+        
         # inititalize matrix:
         self._init_matrix(original_matrix)
         self._init_csr_matrix_()
@@ -226,13 +243,29 @@ class SubMatrix:
         """
         return self.protein_matrix
     
-    def get_list_of_proteins(self) -> np.array:
+    def get_list_of_proteins(self) -> list:
         """             
         Purpose:    allows for access to the list of proteins in the matrix
         Returns:    a list of proteins
         """
         return self.list_of_all_proteins_in_matrix
     
+
+    def get_list_of_proteins_connected_to_protein(self, protein1: str) -> list:
+        """
+        Parameters: protein1 is a protein of interest
+        Purpose:    to create a list of proteins connected to the given protein
+        """
+        connections = list()
+        for protein2 in self.get_list_of_proteins():
+
+            if self.protein_matrix[protein1][protein2]:
+                connections.append(protein2)
+        
+        return connections
+
+
+
     def get_interaction(self, protein1: str, protein2: str):
         """             
         Purpose:    to access the interaction values stored in the matrix
