@@ -73,6 +73,7 @@ class PrintToFile:
             
     
         
+<<<<<<< HEAD
 
 
 
@@ -80,3 +81,11 @@ class PrintToFile:
 
         
     
+=======
+    def print_all_proteins(self, matrix: ProteinMatrix or SubMatrix, filepath:str = "protein_list.txt") -> None:
+        
+        with open(filepath, 'w') as f:
+            
+            for protein in matrix.get_list_of_proteins():
+                f.write(f"{protein} ")
+>>>>>>> file_conversion

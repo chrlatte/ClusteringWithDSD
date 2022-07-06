@@ -90,7 +90,7 @@ class ProteinMatrix:
         """
         return self.protein_matrix
     
-    def get_list_of_proteins(self) -> np.array:
+    def get_list_of_proteins(self) -> list:
         """             
         Purpose:    to access the list of all proteins in the matrix
         Returns:    an array of all proteins in the matrix
@@ -243,7 +243,7 @@ class SubMatrix:
         """
         return self.protein_matrix
     
-    def get_list_of_proteins(self) -> np.array:
+    def get_list_of_proteins(self) -> list:
         """             
         Purpose:    allows for access to the list of proteins in the matrix
         Returns:    a list of proteins
