@@ -62,17 +62,38 @@ def print_all_clusters_and_connected_proteins(matrix: ProteinMatrix, clusters: A
         print_single_cluster_and_connected_proteins(x, matrix, clusters, degreelist)
 
 
-def find_clusters_that_match_criteria(matrix: ProteinMatrix, clusters: AllClusters, degreelist: DegreeList) -> list():
+def find_clusters_that_match_criteria(matrix: ProteinMatrix, clusters: AllClusters, degreelist: DegreeList, ratio: float = .5, constant: int = 0) -> list():
+    """
+    TODO
+    a cluster that can be easily re-connected
+    num components must be less than num_proteins_in_cluster * ratio + constant
+    would eventually like to revise the fxn to be non-linear
+    """
+    cluster_nums_that_qualify = list()
+
+    for key in clusters.get_all_clusters():
+        # create a submatrix out of the proteins in the cluster
+        submatrix = SubMatrix(clusters.get_cluster_proteins(key), matrix)
+        num_components, labels = submatrix.get_num_components_and_labels()
+
+        if num_components < ratio * len(submatrix.get_list_of_proteins()) + constant: # cluster qualifies
+            cluster_nums_that_qualify.append(key)
+
+    return cluster_nums_that_qualify
+
+
+
+
+def find_proteins_that_match_criteria(cluster_num: int, matrix: ProteinMatrix, clusters: AllClusters, degreelist: DegreeList, min_components_that_it_connects: int = 3, max_degree: int = 500) -> list():
     """
     TODO
     """
+
     pass
 
-def find_proteins_that_match_criteria(x: int, matrix: ProteinMatrix, clusters: AllClusters, degreelist: DegreeList) -> list():
-    """
-    TODO
-    """
-    pass
+
+
+
 
 def create_dict_of_proteins_to_add_to_clusters(x: int, matrix: ProteinMatrix, clusters: AllClusters, degreelist: DegreeList) -> dict():
     """
