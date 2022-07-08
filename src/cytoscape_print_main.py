@@ -23,16 +23,40 @@ def main():
 
 
     
+<<<<<<< Updated upstream
     matrix = ProteinMatrix(dream3_matrix_file)
     clusters = AllClusters(dream3_old_cluster_file)
+=======
+<<<<<<< HEAD
+    matrix = ProteinMatrix(testing_matrix_file)
+    clusters = AllClusters(testing_cluster_file)
+=======
+    matrix = ProteinMatrix(dream3_matrix_file)
+    clusters = AllClusters(dream3_old_cluster_file)
+>>>>>>> file_conversion
+>>>>>>> Stashed changes
 
     foo = PrintToFile()
 
     
+<<<<<<< Updated upstream
     # foo.print_all_interactions(matrix)
     # foo.assign_colors_to_clusters(clusters)
 
     foo.print_all_proteins(matrix)
+=======
+<<<<<<< HEAD
+    foo.print_all_interactions(matrix)
+    foo.assign_colors_to_clusters(clusters)
+
+
+=======
+    # foo.print_all_interactions(matrix)
+    # foo.assign_colors_to_clusters(clusters)
+
+    foo.print_all_proteins(matrix)
+>>>>>>> file_conversion
+>>>>>>> Stashed changes
 
 
 

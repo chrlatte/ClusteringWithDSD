@@ -73,9 +73,27 @@ class PrintToFile:
             
     
         
+<<<<<<< Updated upstream
     def print_all_proteins(self, matrix: ProteinMatrix or SubMatrix, filepath:str = "protein_list.txt") -> None:
         
+=======
+<<<<<<< HEAD
+
+
+
+
+
+        
+    
+=======
+    def print_all_proteins(self, matrix: ProteinMatrix or SubMatrix, filepath:str = "protein_list.txt") -> None:
+        
+>>>>>>> Stashed changes
         with open(filepath, 'w') as f:
             
             for protein in matrix.get_list_of_proteins():
                 f.write(f"{protein} ")
+<<<<<<< Updated upstream
+=======
+>>>>>>> file_conversion
+>>>>>>> Stashed changes
