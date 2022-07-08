@@ -243,7 +243,7 @@ class SubMatrix:
         """
         return self.protein_matrix
     
-    def get_list_of_proteins(self) -> np.array:
+    def get_list_of_proteins(self) -> list:
         """             
         Purpose:    allows for access to the list of proteins in the matrix
         Returns:    a list of proteins
@@ -272,6 +272,7 @@ class SubMatrix:
         Returns:    the value at the specified indexes
         """
         return self.protein_matrix.loc[protein1, protein2]
+
 
     def get_num_components_and_labels(self):
         """

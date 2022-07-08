@@ -69,7 +69,7 @@ class AllClusters:
         return f"AllClusters has {len(self.clusters)} clusters (use the print_all method to see them)"
 
 
-    def add_protein_to_cluster(self, protein:str, cluster_num:int):
+    def add_protein_to_cluster(self, protein:str, cluster_num:int) -> None:
         """             
         Parameters: 
             -   protein is the protein to add to a specified cluster
@@ -100,6 +100,12 @@ class AllClusters:
         Returns:    
         """
         return len(self.clusters)
+
+    def get_all_clusters(self) -> dict():
+        """
+        TODO
+        """
+        return dict(self.clusters)
 
 
     def print_all(self) -> None:
