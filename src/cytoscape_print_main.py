@@ -24,20 +24,31 @@ def main():
 
     
 <<<<<<< HEAD
+<<<<<<< HEAD
     matrix = ProteinMatrix(testing_matrix_file)
     clusters = AllClusters(testing_cluster_file)
 =======
     matrix = ProteinMatrix(dream3_matrix_file)
     clusters = AllClusters(dream3_old_cluster_file)
 >>>>>>> file_conversion
+=======
+    matrix = ProteinMatrix(dream3_matrix_file)
+    clusters = AllClusters(dream3_old_cluster_file)
+>>>>>>> components
 
     foo = PrintToFile()
 
     
 <<<<<<< HEAD
+<<<<<<< HEAD
     foo.print_all_interactions(matrix)
     foo.assign_colors_to_clusters(clusters)
+=======
+    # foo.print_all_interactions(matrix)
+    # foo.assign_colors_to_clusters(clusters)
+>>>>>>> components
 
+    foo.print_all_proteins(matrix, filepath="../data/testing_data/protein_list.txt")
 
 =======
     # foo.print_all_interactions(matrix)

@@ -58,7 +58,10 @@ def main():
     # clusters.get_cluster_proteins(0) # TODO is empty
 
     
-    print_all_clusters_and_connected_proteins(matrix, clusters, degreelist)
+    # print_all_clusters_and_connected_proteins(matrix, clusters, degreelist)
+    # create_dict_of_proteins_to_add_to_clusters()
+    clusters_that_are_somewhat_connected = find_clusters_that_match_criteria(matrix, clusters, degreelist, ratio=1)
+    print(f"clusters_that_are_somewhat_connected: {clusters_that_are_somewhat_connected}")
 
 if __name__ == "__main__":
     main()

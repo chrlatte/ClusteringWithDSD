@@ -273,6 +273,7 @@ class SubMatrix:
         """
         return self.protein_matrix.loc[protein1, protein2]
 
+
     def get_num_components_and_labels(self):
         """
         TODO

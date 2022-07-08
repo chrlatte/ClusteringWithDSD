@@ -1,2 +1,3 @@
-__pychache__/
+__pychache__/*
 *.npy
+protein_list.txt
