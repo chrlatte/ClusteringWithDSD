@@ -23,15 +23,16 @@ def main():
 
 
     
-    matrix = ProteinMatrix(testing_matrix_file)
-    clusters = AllClusters(testing_cluster_file)
+    matrix = ProteinMatrix(dream3_matrix_file)
+    clusters = AllClusters(dream3_old_cluster_file)
 
     foo = PrintToFile()
 
     
-    foo.print_all_interactions(matrix)
-    foo.assign_colors_to_clusters(clusters)
+    # foo.print_all_interactions(matrix)
+    # foo.assign_colors_to_clusters(clusters)
 
+    foo.print_all_proteins(matrix, filepath="../data/testing_data/protein_list.txt")
 
 
 
