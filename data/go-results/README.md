@@ -1,4 +1,4 @@
-** Format of the GO results
+** Format of the GO results**
 ---
 
 The GO results for the DREAM3 network is provided in the `dream_3_go_results.tsv` file.
