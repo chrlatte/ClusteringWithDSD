@@ -1,2 +1,4 @@
-__pychache__/
+__pychache__/*
 *.npy
+src/__pychache__/*
+data/go/go-basic.obo
