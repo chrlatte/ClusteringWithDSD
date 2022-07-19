@@ -180,7 +180,7 @@ class DegreeList:
         return qualifying_proteins
         
 
-    def which_components_of_a_cluster_would_a_protein_connect(self, protein: str, cluster_of_proteins, protein_to_component_dict: dict(), connected_proteins_within_cluster:list = []) -> set:
+    def which_components_of_a_cluster_would_a_protein_connect(self, protein: str, cluster_of_proteins: list(), protein_to_component_dict: dict(), connected_proteins_within_cluster:list = []) -> set:
         """
         Parameters: 
             -   cluster is a cluster containing a group of proteins that are 
