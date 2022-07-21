@@ -27,40 +27,36 @@ def main():
     testing_cluster_file = "../data/testing_data/fake_cluster.txt"
 
     dream3_matrix_file = "../data/networks/DREAM_files/dream_3.txt"
+    dream3_cluster_file = "../data/results/DREAM-3-cc/d3_5_100.json-cluster.json"
+
+    dream3_clusters_dict = {}
+    # convert actual cluster file to a dictionary!!
+    with open(dream3_cluster_file,"r") as cluster_dict_file:
+        dream3_clusters_dict = json.load(cluster_dict_file)
     
-    dream3_cluster_dict = "../data/results/DREAM-3-cc/d3_5_100.json-cluster.json"
-    dict_of_clusters = {}
-    # # convert actual cluster file to a dictionary!!
-    with open(dream3_cluster_dict,"r") as cluster_dict_file:
-        dict_of_clusters = json.load(cluster_dict_file)
-    
 
-    dream2_matrix_file = "../data/networks/DREAM_files/dream_2.txt"
-    dream3_old_cluster_file = "../data/clusters/3344522.7320912.1_ppi_anonym_v2.txt"
+    # # Testing Data:
+    # matrix = ProteinMatrix(testing_matrix_file)
+    # clusters = AllClusters(testing_cluster_file)
+    # degreelist = DegreeList(matrix)
+
+    # Dream3 Data:
+    clusters = AllClusters(protein_to_cluster_dict=dream3_clusters_dict)
+
+    # matrix = ProteinMatrix(dream3_matrix_file)
+    # degreelist = DegreeList(matrix)
 
 
-    matrix = ProteinMatrix(dream3_matrix_file)
     # print(f"Matrix:\n{matrix}")
-
-
-    
-    clusters = AllClusters(protein_to_cluster_dict=dict_of_clusters)
-    # # print(f"Clusters:\n{clusters}")
+    # print(f"Clusters:\n{clusters}")
     # clusters.print_all()
-
-    degreelist = DegreeList(matrix)
     # print(f"Degree list:\n{degreelist}")
 
- 
-    
 
-    # print_cluster_components_and_proteins_that_are_connected(matrix, clusters, degreelist)
-    # clusters.get_cluster_proteins(0) # TODO is empty
+    # first, going to find the clusters that are moderatly connected (by dream3 standards) (for dict0, there are 0 clusters with a .75, 1 that fits .8 & .85, 4 with .9) (for dict1 there are lots of clusters for ratio .9, lots for ratio = .7) CHOOSING TO USE DICT1 so RATIO = .5 -> clusters must be more than 50% connected
+    clusters_that_are_somewhat_connected = find_clusters_that_match_criteria(matrix, clusters, degreelist)
 
-    
-    # print_all_clusters_and_connected_proteins(matrix, clusters, degreelist)
-    # create_dict_of_proteins_to_add_to_clusters()
-    clusters_that_are_somewhat_connected = find_clusters_that_match_criteria(matrix, clusters, degreelist, ratio=1)
+
     print(f"clusters_that_are_somewhat_connected: {clusters_that_are_somewhat_connected}")
 
 if __name__ == "__main__":
