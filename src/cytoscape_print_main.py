@@ -21,18 +21,22 @@ def main():
     dream3_matrix_file = "../data/networks/DREAM_files/dream_3.txt"
     dream3_old_cluster_file = "../data/clusters/3344522.7320912.1_ppi_anonym_v2.txt"
 
+    # matrix = ProteinMatrix(testing_matrix_file)
+    # clusters = AllClusters(testing_cluster_file)
 
-    
     matrix = ProteinMatrix(dream3_matrix_file)
     clusters = AllClusters(dream3_old_cluster_file)
 
+
     foo = PrintToFile()
 
-    
-    # foo.print_all_interactions(matrix)
-    # foo.assign_colors_to_clusters(clusters)
+
+    foo.print_all_interactions(matrix)
+    foo.assign_colors_to_clusters(clusters)
+
 
     foo.print_all_proteins(matrix, filepath="../data/testing_data/protein_list.txt")
+    foo.print_all_proteins(matrix)
 
 
 

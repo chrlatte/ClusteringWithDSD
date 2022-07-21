@@ -1,5 +1,4 @@
 protein:	color
-<<<<<<< HEAD
 C0P1	0
 C0P2	0
 C0P3	0
@@ -15,5 +14,3 @@ C2P3	2
 C2P4	2
 C2P5	2
 C2P6	2
-=======
->>>>>>> file_conversion
