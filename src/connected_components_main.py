@@ -51,16 +51,18 @@ def main():
     # print(f"Degree list:\n{degreelist}")
 
 
-    # first, going to find the clusters that are moderatly connected (by dream3 standards)
-    clusters_that_are_somewhat_connected = find_clusters_that_match_criteria(matrix, clusters, degreelist, ratio=pick_ratio(clusters.get_num_clusters())) # subtracting 0.025 to reduce the number of qualifying clusters
+    # # first, going to find the clusters that are moderatly connected (by dream3 standards)
+    # clusters_that_are_somewhat_connected = find_clusters_that_match_criteria(matrix, clusters, degreelist, ratio=pick_ratio(clusters.get_num_clusters())) # subtracting 0.025 to reduce the number of qualifying clusters
 
-    print(f"clusters_that_are_somewhat_connected: {clusters_that_are_somewhat_connected}")
+    # print(f"clusters_that_are_somewhat_connected: {clusters_that_are_somewhat_connected}")
 
     
-    for cluster_num in clusters_that_are_somewhat_connected: # can also use range(200) to check all clusters
-        qualifying_proteins = find_proteins_that_match_criteria(cluster_num, matrix, clusters, degreelist, min_components_that_protein_connects=3, max_degree=500)
-        if len(qualifying_proteins) > 0:
-            print(f"CLUSTER {cluster_num} has {len(qualifying_proteins)} qualifying proteins: {qualifying_proteins}")
+    # for cluster_num in clusters_that_are_somewhat_connected: # can also use range(200) to check all clusters
+    #     qualifying_proteins = find_proteins_that_match_criteria(cluster_num, matrix, clusters, degreelist, min_components_that_protein_connects=3, max_degree=500)
+    #     if len(qualifying_proteins) > 0:
+    #         print(f"CLUSTER {cluster_num} has {len(qualifying_proteins)} qualifying proteins: {qualifying_proteins}")
+
+    qualifying_clusters, qualifying_proteins = find_clusters_and_proteins_together(matrix, clusters, degreelist, cluster_ratio=pick_ratio(clusters.get_num_clusters()), min_components_that_protein_connects=3)
 
 
 if __name__ == "__main__":
