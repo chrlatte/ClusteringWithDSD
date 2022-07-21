@@ -1,3 +1,6 @@
 __pychache__/*
 *.npy
 protein_list.txt
+src/__pychache__/*
+data/go/go-basic.obo
+src/analysis/gene2go
