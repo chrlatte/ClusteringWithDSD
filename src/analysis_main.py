@@ -19,37 +19,48 @@ from degreelist_class import DegreeList
 
 
 from connected_components_utils import *
+from analysis_utils import *
+
+from func_e.FUNC_E import FUNC_E # import the class
+import func_e.vocabs.all as vocabs
 
 
 def main():
 
-    testing_matrix_file = "../data/testing_data/fake_cluster_dream.txt"
-    testing_cluster_file = "../data/testing_data/fake_cluster.txt"
-
-    dream3_matrix_file = "../data/networks/DREAM_files/dream_3.txt"
-    dream3_cluster_file = "../data/results/DREAM-3-cc/d3_5_100.json-cluster.json" 
-
-    dream3_clusters_dict = {}
-    # convert actual cluster file to a dictionary!!
-    with open(dream3_cluster_file,"r") as cluster_dict_file:
-        dream3_clusters_dict = json.load(cluster_dict_file)
-
-
-    # Dream3 Data:
-    clusters = AllClusters(protein_to_cluster_dict=dream3_clusters_dict)
-    matrix = ProteinMatrix(dream3_matrix_file)
-    degreelist = DegreeList(matrix)
-
-    # print(f"Matrix:\n{matrix}")
-    # print(f"Clusters:\n{clusters}")
-    # clusters.print_all()
-    # print(f"Degree list:\n{degreelist}")
-
-
+    matrix, clusters, degreelist = initialize_matrix_clusters_degreelist("../data/networks/DREAM_files/dream_3.txt", "../data/results/DREAM-3-cc/d3_5_100.json-cluster.json")
+    
     qualifying_clusters, qualifying_proteins = find_clusters_and_proteins_together(matrix, clusters, degreelist, cluster_ratio=pick_ratio(clusters.get_num_clusters()), protein_ratio=.05, protein_constant=2)
 
-    print(f"{qualifying_proteins}")
+
+    genomic_background_filepath = '../data/testing_data/protein_list.txt'
+    termlist = vocabs.getTerms(['GO'])
+    term_mapping_filepath = 'term_mapping.txt'
+    create_term_mapping_list('../data/go-results/dream_3_go_results.tsv', term_mapping_filepath)
+
+
+
+    og_clusters_querylist_path = 'original_querylist.txt'
+    clusters.print_querylist_of_clusters_to_file(qualifying_clusters, og_clusters_querylist_path)
+
+
+
+    original_fe = FUNC_E()
+    original_fe.importFiles({
+        'background': genomic_background_filepath, 
+        'query': og_clusters_querylist_path, 
+        'terms2features': term_mapping_filepath })
+    original_fe.setTerms(termlist)
+    original_fe.setEnrichmentSettings({'ecut': 0.01})
+    original_fe.run(cluster=False)
+
+    print(f"ORIGINAL TABLE:\n{original_fe.enrichment.sort_values('Fishers_pvalue')}")
+
+    update_clusters(clusters, qualifying_proteins)
+    new_clusters_querylist_path = 'new_querylist.txt'
     
+    clusters.print_querylist_of_clusters_to_file(qualifying_clusters, new_clusters_querylist_path)
+    
+
     
 
 if __name__ == "__main__":

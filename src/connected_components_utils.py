@@ -135,7 +135,7 @@ def qualifying_proteins_using_submatrix(cluster_num: int, submatrix: SubMatrix, 
 
 
 
-def find_clusters_and_proteins_together(matrix: ProteinMatrix, clusters: AllClusters, degreelist: DegreeList, cluster_ratio: float = .5, cluster_constant: int = 0, protein_ratio: float = .5, protein_constant: int = 0, min_components_that_protein_connects: int = -1, max_degree: int = 500) -> list() and dict():
+def find_clusters_and_proteins_together(matrix: ProteinMatrix, clusters: AllClusters, degreelist: DegreeList, cluster_ratio: float = .5, cluster_constant: int = 0, protein_ratio: float = .05, protein_constant: int = 2, min_components_that_protein_connects: int = -1, max_degree: int = 500) -> list() and dict():
     """
     function is a version of find_clusters_that_match_criteria, that, once it finds the cluster, finds corresponding proteins at the same time so that the submatrix doesn't need to be reconstructed
 
@@ -169,6 +169,7 @@ def find_clusters_and_proteins_together(matrix: ProteinMatrix, clusters: AllClus
 
 
     return cluster_nums_that_qualify, qualifying_proteins_dict
+
 
 def update_clusters(original_clusters: AllClusters,clusters_to_qualifying_proteins: dict()) -> AllClusters:
     """

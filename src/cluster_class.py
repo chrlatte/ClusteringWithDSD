@@ -14,6 +14,8 @@ import pandas as pd
 import numpy as np
 from collections import defaultdict
 
+from sklearn import cluster
+
 class AllClusters:
 
     """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
@@ -121,6 +123,20 @@ class AllClusters:
         for cluster_num in self.clusters.keys():
             print(f"Cluster {cluster_num}: {self.get_cluster_proteins(cluster_num)}")
     
+
+    def print_querylist_of_clusters_to_file(self, clusters_to_print: list(), query_filepath: str = "querylist.txt"):
+        """
+        clusters_to_print -> specify a list of which clusters to print
+        TODO
+        """
+        output_file = open(query_filepath, 'w')
+        for cluster_num in clusters_to_print:
+            for protein in self.get_cluster_proteins(cluster_num):
+                output_file.write(f"{protein}\tcluster_{cluster_num}\n")
+
+
+
+
     def print_to_file(self, filename: str = "output.txt", print_as_dict=False) -> None:
         """
         TODO
@@ -130,3 +146,5 @@ class AllClusters:
         if print_as_dict:
             pass
         pass
+
+
