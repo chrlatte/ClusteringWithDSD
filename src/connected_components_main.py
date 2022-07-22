@@ -8,65 +8,73 @@ Purpose: a main to use the scipy library to determine connected components in a 
 
 """
 
-from matrix_class import *
-from cluster_class import *
-from degreelist_class import *
-import sys
+import numpy as np
+import json
 
-# from scipy.sparse import coo_matrix
-# from scipy.sparse import csr_matrix
-# from scipy.sparse.csgraph import connected_components
+
+from matrix_class import ProteinMatrix
+from matrix_class import SubMatrix
+from cluster_class import AllClusters
+from degreelist_class import DegreeList
+
+
+from connected_components_utils import *
 
 
 def main():
 
-    smaller_testing_matrix_file = "../data/testing_data/tiny_dream3.txt"
-    testing_matrix_file = "../data/testing_data/small_dream3.txt"
-
-    matrix_file_for_cluster = "../data/testing_data/fake_cluster_dream.txt"
+    testing_matrix_file = "../data/testing_data/fake_cluster_dream.txt"
     testing_cluster_file = "../data/testing_data/fake_cluster.txt"
 
-    actual_matrix_file = "../data/networks/DREAM_files/dream_2.txt"
-    smaller_cluster_file = "../data/testing_data/moderately_connected_clusters.txt"
-    actual_cluster_file = "../data/clusters/3344522.7320912.1_ppi_anonym_v2.txt"
+    dream3_matrix_file = "../data/networks/DREAM_files/dream_3.txt"
+    dream3_cluster_file = "../data/results/DREAM-3-cc/d3_5_100.json-cluster.json" 
 
-
-    matrix = ProteinMatrix(matrix_file_for_cluster)
-    # print(f"Matrix:\n{matrix}")
-
-    clusters = AllClusters(testing_cluster_file)
-    # print(f"Clusters:\n{clusters}")
-    clusters.print_all()
-
-    degreelist = DegreeList(matrix)
-    # print(f"Degree list:\n{degreelist}")
-
- 
+    dream3_clusters_dict = {}
+    # convert actual cluster file to a dictionary!!
+    with open(dream3_cluster_file,"r") as cluster_dict_file:
+        dream3_clusters_dict = json.load(cluster_dict_file)
     
 
-    for i in range(clusters.get_num_clusters()):
+    # # Testing Data:
+    # matrix = ProteinMatrix(testing_matrix_file)
+    # clusters = AllClusters(testing_cluster_file)
+    # degreelist = DegreeList(matrix)
 
-        print("- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - ")
+    # Dream3 Data:
+    clusters = AllClusters(protein_to_cluster_dict=dream3_clusters_dict)
+    matrix = ProteinMatrix(dream3_matrix_file)
+    degreelist = DegreeList(matrix)
 
-        submatrix = SubMatrix(clusters.get_cluster_proteins(i), matrix)
-        # print(f"SUBMATRIX FROM CLUSTER {i}: \n{submatrix.get_matrix()}")
-        n, labels = submatrix.get_num_components_and_labels()
-        print(f"Cluster {i} has {n} components: {[list(np.array(submatrix.get_list_of_proteins())[np.nonzero(labels == i)]) for i in range(n)]}.")
-        
-        list_of_proteins_connected_to_cluster = degreelist.create_list_of_proteins_connected_to_cluster(degreelist.get_list_of_proteins_sorted_by_degree(), clusters.get_cluster_proteins(i), min_num_connections=3)
+    # print(f"Matrix:\n{matrix}")
+    # print(f"Clusters:\n{clusters}")
+    # clusters.print_all()
+    # print(f"Degree list:\n{degreelist}")
 
-        print(f"proteins connected 3+ times to cluster {i}: {list_of_proteins_connected_to_cluster}")
 
-        
-        for protein in list_of_proteins_connected_to_cluster:
+    # # first, going to find the clusters that are moderatly connected (by dream3 standards)
+    # clusters_that_are_somewhat_connected = find_clusters_that_match_criteria(matrix, clusters, degreelist, ratio=pick_ratio(clusters.get_num_clusters())) # subtracting 0.025 to reduce the number of qualifying clusters
 
-            will_connect = degreelist.determine_if_a_protein_will_connect_a_cluster(protein, clusters.get_cluster_proteins(i), labels)
-            
-            if will_connect:
-                print(f"protein {protein} will connect components {degreelist.which_components_of_a_cluster_would_a_protein_connect(protein, clusters.get_cluster_proteins(i), labels)}")
-            else:
-                print(f"{protein} will not connect cluster.")
+    # print(f"clusters_that_are_somewhat_connected: {clusters_that_are_somewhat_connected}")
 
+    
+    # for cluster_num in clusters_that_are_somewhat_connected: # can also use range(200) to check all clusters
+    #     qualifying_proteins = find_proteins_that_match_criteria(cluster_num, matrix, clusters, degreelist, min_components_that_protein_connects=3, max_degree=500)
+    #     if len(qualifying_proteins) > 0:
+    #         print(f"CLUSTER {cluster_num} has {len(qualifying_proteins)} qualifying proteins: {qualifying_proteins}")
+
+    qualifying_clusters, qualifying_proteins = find_clusters_and_proteins_together(matrix, clusters, degreelist, cluster_ratio=pick_ratio(clusters.get_num_clusters()), protein_ratio=.05, protein_constant=2)
+
+    print(f"{qualifying_proteins}")
+    
+    print(f" og 25: {clusters.get_cluster_proteins(25)}")
+
+    update_clusters(clusters, qualifying_proteins)
+    print(f"new 25: {clusters.get_cluster_proteins(25)}")
+
+    # update_clusters(clusters, qualifying_proteins)
+    # update_clusters(clusters, qualifying_proteins)
+    # update_clusters(clusters, qualifying_proteins)
+    # print(f"new 25: {clusters.get_cluster_proteins(25)}")
 
 
 if __name__ == "__main__":

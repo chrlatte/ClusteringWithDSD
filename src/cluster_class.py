@@ -20,8 +20,8 @@ class AllClusters:
     * * * * * * * * * * * * * MEMBER VARIABLES * * * * * * * * * * * * * *  
     """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 
-    clusters = defaultdict(lambda : []) # a dict of relation {cluster_num : list_of_proteins_in_cluster}
-
+    clusters = defaultdict(lambda: []) # a dict of relation {cluster_num : list_of_proteins_in_cluster}
+    
     """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
     * * * * * * * * * * * * * * INITIALIZERS * * * * * * * * * * * * * * *  
     """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
@@ -51,9 +51,12 @@ class AllClusters:
                 print(f"ERROR! file: {csv_filename} not found.")
         
         elif protein_to_cluster_dict: # dictionary not empty
-            # print("non-empty dictionary given!!")
-            for protein in protein_to_cluster_dict:
-                self.add_protein_to_cluster(protein, protein_to_cluster_dict[protein])
+            for protein in protein_to_cluster_dict.keys():
+                self.add_protein_to_cluster(protein, int(protein_to_cluster_dict[protein]))
+        
+        else:
+            # print(f"ERROR! please specify a [csv_filename] or a [protein_to_cluster_dict] not found.")
+            pass
             
 
         
@@ -69,7 +72,7 @@ class AllClusters:
         return f"AllClusters has {len(self.clusters)} clusters (use the print_all method to see them)"
 
 
-    def add_protein_to_cluster(self, protein:str, cluster_num:int):
+    def add_protein_to_cluster(self, protein:str, cluster_num:int) -> None:
         """             
         Parameters: 
             -   protein is the protein to add to a specified cluster
@@ -101,6 +104,12 @@ class AllClusters:
         """
         return len(self.clusters)
 
+    def get_all_clusters(self) -> dict():
+        """
+        TODO
+        """
+        return dict(self.clusters)
+
 
     def print_all(self) -> None:
         """             
@@ -109,5 +118,15 @@ class AllClusters:
         """
         print(self.clusters.keys())
         
-        for cluster_key in self.clusters.keys():
-            print(f"Cluster {cluster_key}: {self.get_cluster_proteins(cluster_key)}")
+        for cluster_num in self.clusters.keys():
+            print(f"Cluster {cluster_num}: {self.get_cluster_proteins(cluster_num)}")
+    
+    def print_to_file(self, filename: str = "output.txt", print_as_dict=False) -> None:
+        """
+        TODO
+        """
+        print(f"ERROR! function unfinished: print_to_file")
+        output_file = open(filename, 'w')
+        if print_as_dict:
+            pass
+        pass
