@@ -62,7 +62,9 @@ def main():
     #     if len(qualifying_proteins) > 0:
     #         print(f"CLUSTER {cluster_num} has {len(qualifying_proteins)} qualifying proteins: {qualifying_proteins}")
 
-    qualifying_clusters, qualifying_proteins = find_clusters_and_proteins_together(matrix, clusters, degreelist, cluster_ratio=pick_ratio(clusters.get_num_clusters()), min_components_that_protein_connects=3)
+    qualifying_clusters, qualifying_proteins = find_clusters_and_proteins_together(matrix, clusters, degreelist, cluster_ratio=pick_ratio(clusters.get_num_clusters()), protein_ratio=.05, protein_constant=2)
+
+    print(f"{qualifying_proteins}")
 
 
 if __name__ == "__main__":

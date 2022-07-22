@@ -170,4 +170,3 @@ def find_clusters_and_proteins_together(matrix: ProteinMatrix, clusters: AllClus
 
     return cluster_nums_that_qualify, qualifying_proteins_dict
 
-
