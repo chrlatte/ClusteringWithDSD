@@ -120,3 +120,13 @@ class AllClusters:
         
         for cluster_num in self.clusters.keys():
             print(f"Cluster {cluster_num}: {self.get_cluster_proteins(cluster_num)}")
+    
+    def print_to_file(self, filename: str = "output.txt", print_as_dict=False) -> None:
+        """
+        TODO
+        """
+        print(f"ERROR! function unfinished: print_to_file")
+        output_file = open(filename, 'w')
+        if print_as_dict:
+            pass
+        pass

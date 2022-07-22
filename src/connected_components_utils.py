@@ -171,21 +171,16 @@ def find_clusters_and_proteins_together(matrix: ProteinMatrix, clusters: AllClus
     return cluster_nums_that_qualify, qualifying_proteins_dict
 
 
-def create_new_clusters(clusters_to_qualifying_proteins: dict(), csv_filename: str = "", protein_to_cluster_dict: dict() = {}, original_clusters: AllClusters = AllClusters()) -> AllClusters:
+def update_clusters(original_clusters: AllClusters,clusters_to_qualifying_proteins: dict()) -> AllClusters:
     """
-    csv_filename: str = "", protein_to_cluster_dict: dict() ={}, original_clusters: AllClusters = AllClusters(), are all different ways to pass in info to make new clusters (and you should choose one of them). Please note, that if you use Original Clusters, the original clusters will be modified to include the new qualifying proteins
-    """
-    modified_clusters = AllClusters()
-    
-    if csv_filename != "":
-        modified_clusters = AllClusters(csv_filename=csv_filename)
-    elif protein_to_cluster_dict: # dictionary not empty
-        modified_clusters = AllClusters(protein_to_cluster_dict=protein_to_cluster_dict)
-    else:
-        modified_clusters = original_clusters
+    AllClusters = AllClusters() Please note, that when you use Original Clusters, the original clusters will be modified to include the new qualifying proteins
+    TODO
+    """    
+    modified_clusters = original_clusters
     
     for key in clusters_to_qualifying_proteins:
         if clusters_to_qualifying_proteins[key]: # will return true if this cluster has qualifying proteins (list not empty)
             for protein in clusters_to_qualifying_proteins[key]:
                 modified_clusters.add_protein_to_cluster(protein, key)
+    
     return modified_clusters

@@ -65,11 +65,16 @@ def main():
     qualifying_clusters, qualifying_proteins = find_clusters_and_proteins_together(matrix, clusters, degreelist, cluster_ratio=pick_ratio(clusters.get_num_clusters()), protein_ratio=.05, protein_constant=2)
 
     print(f"{qualifying_proteins}")
+    
+    print(f" og 25: {clusters.get_cluster_proteins(25)}")
 
-    new_clusters = create_new_clusters(qualifying_proteins, protein_to_cluster_dict=dream3_clusters_dict)
+    update_clusters(clusters, qualifying_proteins)
+    print(f"new 25: {clusters.get_cluster_proteins(25)}")
 
-    print(f" og 25: {clusters.get_cluster_proteins(25)}\nnew 25: {new_clusters.get_cluster_proteins(25)}")
-    print(f" og 185: {clusters.get_cluster_proteins(185)}\nnew 185: {new_clusters.get_cluster_proteins(185)}")
+    # update_clusters(clusters, qualifying_proteins)
+    # update_clusters(clusters, qualifying_proteins)
+    # update_clusters(clusters, qualifying_proteins)
+    # print(f"new 25: {clusters.get_cluster_proteins(25)}")
 
 
 if __name__ == "__main__":
