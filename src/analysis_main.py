@@ -9,7 +9,8 @@ Purpose: a main TODO
 """
 
 import numpy as np
-import json
+import pandas as pd
+
 
 
 from matrix_class import ProteinMatrix
@@ -70,9 +71,22 @@ def main():
     updated_fe.setEnrichmentSettings({'ecut': 0.01})
     updated_fe.run(cluster=False)
     
-    print(f"ORIGINAL CLUSTERS TABLE:\n{original_fe.enrichment.sort_values('Fishers_pvalue')}")
-    print(f"UPDATED CLUSTERS TABLE:\n{updated_fe.enrichment.sort_values('Fishers_pvalue')}")
+    # print(f"ORIGINAL CLUSTERS TABLE:\n{original_fe.enrichment.sort_values('Fishers_pvalue')}")
+    # print(f"UPDATED CLUSTERS TABLE:\n{updated_fe.enrichment.sort_values('Fishers_pvalue')}")
+
+
+    updated_df = updated_fe.enrichment[['Module', 'Term', 'Fishers_pvalue']].copy()
+    original_df = original_fe.enrichment[['Module', 'Term', 'Fishers_pvalue']].copy()
+
+    print(f"ORIGINAL CLUSTERS TABLE:\n{original_df}")
+    print(f"UPDATED CLUSTERS TABLE:\n{updated_df}")
+
+    results_df = pd.merge(original_df, updated_df, on=['Module','Term'], how='outer')
+
+    print(f"FINAL MERGE:\n{results_df}")
     
+    results_df.to_csv("results.txt", sep='\t')
+
 
 if __name__ == "__main__":
     main()
