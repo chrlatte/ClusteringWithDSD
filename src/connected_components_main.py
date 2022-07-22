@@ -76,6 +76,8 @@ def main():
     # update_clusters(clusters, qualifying_proteins)
     # print(f"new 25: {clusters.get_cluster_proteins(25)}")
 
+    
+    print_all_clusters_and_connected_proteins(matrix, clusters, degreelist)
 
 if __name__ == "__main__":
     main()
