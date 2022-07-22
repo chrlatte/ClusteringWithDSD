@@ -66,6 +66,11 @@ def main():
 
     print(f"{qualifying_proteins}")
 
+    new_clusters = create_new_clusters(qualifying_proteins, protein_to_cluster_dict=dream3_clusters_dict)
+
+    print(f" og 25: {clusters.get_cluster_proteins(25)}\nnew 25: {new_clusters.get_cluster_proteins(25)}")
+    print(f" og 185: {clusters.get_cluster_proteins(185)}\nnew 185: {new_clusters.get_cluster_proteins(185)}")
+
 
 if __name__ == "__main__":
     main()

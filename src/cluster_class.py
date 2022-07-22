@@ -51,12 +51,12 @@ class AllClusters:
                 print(f"ERROR! file: {csv_filename} not found.")
         
         elif protein_to_cluster_dict: # dictionary not empty
-            # print("non-empty dictionary given!!")
             for protein in protein_to_cluster_dict.keys():
                 self.add_protein_to_cluster(protein, int(protein_to_cluster_dict[protein]))
         
         else:
-            print(f"ERROR! please specify a [csv_filename] or a [protein_to_cluster_dict] not found.")
+            # print(f"ERROR! please specify a [csv_filename] or a [protein_to_cluster_dict] not found.")
+            pass
             
 
         
