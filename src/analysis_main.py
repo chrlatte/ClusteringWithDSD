@@ -53,14 +53,25 @@ def main():
     original_fe.setEnrichmentSettings({'ecut': 0.01})
     original_fe.run(cluster=False)
 
-    print(f"ORIGINAL TABLE:\n{original_fe.enrichment.sort_values('Fishers_pvalue')}")
+
 
     update_clusters(clusters, qualifying_proteins)
-    new_clusters_querylist_path = 'new_querylist.txt'
-    
-    clusters.print_querylist_of_clusters_to_file(qualifying_clusters, new_clusters_querylist_path)
-    
 
+
+    updated_clusters_querylist_path = 'new_querylist.txt'
+    clusters.print_querylist_of_clusters_to_file(qualifying_clusters, updated_clusters_querylist_path)
+
+    updated_fe = FUNC_E()
+    updated_fe.importFiles({
+        'background': genomic_background_filepath, 
+        'query': updated_clusters_querylist_path, 
+        'terms2features': term_mapping_filepath })
+    updated_fe.setTerms(termlist)
+    updated_fe.setEnrichmentSettings({'ecut': 0.01})
+    updated_fe.run(cluster=False)
+    
+    print(f"ORIGINAL CLUSTERS TABLE:\n{original_fe.enrichment.sort_values('Fishers_pvalue')}")
+    print(f"UPDATED CLUSTERS TABLE:\n{updated_fe.enrichment.sort_values('Fishers_pvalue')}")
     
 
 if __name__ == "__main__":

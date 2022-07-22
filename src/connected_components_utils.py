@@ -171,12 +171,18 @@ def find_clusters_and_proteins_together(matrix: ProteinMatrix, clusters: AllClus
     return cluster_nums_that_qualify, qualifying_proteins_dict
 
 
-def update_clusters(original_clusters: AllClusters,clusters_to_qualifying_proteins: dict()) -> AllClusters:
+def update_clusters(original_clusters: AllClusters,clusters_to_qualifying_proteins: dict()) -> None:
     """
-    AllClusters = AllClusters() Please note, that when you use Original Clusters, the original clusters will be modified to include the new qualifying proteins
-    TODO: function contract
-    TODO: should maybe also check if the proteins are already there to avoid double adding them
+    Parameters: 
+            -   original_clusters contains all the clusters. some clusters will 
+                be updated to include additional proteins.
+            -   clusters_to_qualifying_proteins is a dictionary containing 
+                clusters and proteins to be added to these clusters
+    Purpose:    will update the clusters and add the specified proteins
+    Returns:    n/a
+    NOTE:   the original clusters will be modified to include the new qualifying proteins
 
+    TODO: should maybe also check if the proteins are already there to avoid double adding them
     """    
     modified_clusters = original_clusters
     
@@ -185,4 +191,3 @@ def update_clusters(original_clusters: AllClusters,clusters_to_qualifying_protei
             for protein in clusters_to_qualifying_proteins[key]:
                 modified_clusters.add_protein_to_cluster(protein, key)
     
-    return modified_clusters
