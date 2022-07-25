@@ -150,6 +150,7 @@ def find_clusters_and_proteins_together(matrix: ProteinMatrix, clusters: AllClus
     Returns:    a list containing the numbers of the clusters that qualify, and 
                 a dictionary linking each cluster, to a list of the qualifying 
                 proteins
+    TODO: a cluster will qualify if -> IT IS HIGHLY UNCONNECTED
     """
     
     cluster_nums_that_qualify = list()
