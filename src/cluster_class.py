@@ -37,6 +37,8 @@ class AllClusters:
                     file, or from a dictionary
         Returns:    n/a
         """
+        self.clusters.clear()
+
         if csv_filename != "":
             try:
                 with open(csv_filename, "r") as data:
@@ -106,6 +108,13 @@ class AllClusters:
         """
         return len(self.clusters)
 
+    def get_all_cluster_labels(self) -> list():
+        """
+        TODO
+        """
+        print("get_all_cluster_labels fxn has not been tested")
+        return self.clusters.keys()
+
     def get_all_clusters(self) -> dict():
         """
         TODO
@@ -133,7 +142,7 @@ class AllClusters:
         for cluster_num in clusters_to_print:
             for protein in self.get_cluster_proteins(cluster_num):
                 output_file.write(f"{protein}\tcluster_{cluster_num}\n")
-
+        output_file.close()
 
 
 

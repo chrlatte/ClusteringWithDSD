@@ -164,14 +164,19 @@ def find_clusters_and_proteins_together(matrix: ProteinMatrix, clusters: AllClus
 
             # add cluster to list showing that it qualifies, 
             cluster_nums_that_qualify.append(cluster_num)
-            # then do analysis on the cluster
-            qualifying_proteins_dict[cluster_num] = qualifying_proteins_using_submatrix(cluster_num, submatrix, clusters, degreelist, ratio=protein_ratio, constant=protein_constant, min_components_that_protein_connects=min_components_that_protein_connects, max_degree=max_degree)
+
+            # then do analysis on the cluster -> create a list of qualifying proteins
+            qualifying_proteins = qualifying_proteins_using_submatrix(cluster_num, submatrix, clusters, degreelist, ratio=protein_ratio, constant=protein_constant, min_components_that_protein_connects=min_components_that_protein_connects, max_degree=max_degree)
+
+            if qualifying_proteins: # not empty
+                qualifying_proteins_dict[cluster_num] = qualifying_proteins
+            
 
 
     return cluster_nums_that_qualify, qualifying_proteins_dict
 
 
-def update_clusters(original_clusters: AllClusters,clusters_to_qualifying_proteins: dict()) -> None:
+def modified_clusters(original_clusters: AllClusters,clusters_to_qualifying_proteins: dict()) -> AllClusters:
     """
     Parameters: 
             -   original_clusters contains all the clusters. some clusters will 
@@ -179,15 +184,16 @@ def update_clusters(original_clusters: AllClusters,clusters_to_qualifying_protei
             -   clusters_to_qualifying_proteins is a dictionary containing 
                 clusters and proteins to be added to these clusters
     Purpose:    will update the clusters and add the specified proteins
-    Returns:    n/a
+    Returns:    the clusters modified by adding the qualifying proteins
     NOTE:   the original clusters will be modified to include the new qualifying proteins
 
     TODO: should maybe also check if the proteins are already there to avoid double adding them
     """    
     modified_clusters = original_clusters
     
-    for key in clusters_to_qualifying_proteins:
+    for key in clusters_to_qualifying_proteins.keys():
         if clusters_to_qualifying_proteins[key]: # will return true if this cluster has qualifying proteins (list not empty)
             for protein in clusters_to_qualifying_proteins[key]:
                 modified_clusters.add_protein_to_cluster(protein, key)
     
+    return modified_clusters

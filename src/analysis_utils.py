@@ -17,6 +17,10 @@ from json import load as jsonload
 
 
 import numpy as np
+import pandas as pd
+import func_e.vocabs.all as vocabs
+from func_e.FUNC_E import FUNC_E 
+
 
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
  * * * * * * * * * * * * * * * FUNCTIONS * * * * * * * * * * * * * * *
@@ -51,3 +55,24 @@ def create_term_mapping_list(go_terms_filepath: str, term_mapping_filepath: str 
             for line in go_annotation_file:
                 terms = line.split()
                 file.write(f"{terms[1]}\t{terms[0]}\n")
+
+
+
+def print_both_querylists_to_files(qualifying_clusters: list, original_clusters: AllClusters, new_clusters: AllClusters, original_query_filepath:str = 'original_querylist.txt', new_query_filepath:str = 'new_querylist.txt') -> None:
+    """TODO"""
+    original_clusters.print_querylist_of_clusters_to_file(qualifying_clusters, query_filepath=original_query_filepath)
+    new_clusters.print_querylist_of_clusters_to_file(qualifying_clusters, query_filepath=new_query_filepath)
+
+def get_initialized_fe(background_filepath: str, terms2features_filepath: str, termlist: pd.DataFrame() = vocabs.getTerms(['GO']), ecut: float = 0.01) -> FUNC_E():
+    """TODO"""
+    fe = FUNC_E()
+
+    fe.importFiles({
+        'background': background_filepath, 
+        'terms2features': terms2features_filepath })
+    fe.setTerms(termlist)
+    fe.setEnrichmentSettings({'ecut': ecut})
+
+    # now all that is left to do is upload the querylist using fe.importFiles({'query': querylist }), and running it, using fe.run(cluster=False)
+    return fe
+
