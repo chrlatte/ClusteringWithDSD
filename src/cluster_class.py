@@ -133,16 +133,16 @@ class AllClusters:
             print(f"Cluster {cluster_num}: {self.get_cluster_proteins(cluster_num)}")
     
 
-    def print_querylist_of_clusters_to_file(self, clusters_to_print: list(), query_filepath: str = "querylist.txt"):
-        """
-        clusters_to_print -> specify a list of which clusters to print
-        TODO
-        """
-        output_file = open(query_filepath, 'w')
-        for cluster_num in clusters_to_print:
-            for protein in self.get_cluster_proteins(cluster_num):
-                output_file.write(f"{protein}\tcluster_{cluster_num}\n")
-        output_file.close()
+    # def print_querylist_of_clusters_to_file(self, clusters_to_print: list(), query_filepath: str = "querylist.txt"):
+    #     """
+    #     clusters_to_print -> specify a list of which clusters to print
+    #     TODO
+    #     """
+    #     output_file = open(query_filepath, 'w')
+    #     for cluster_num in clusters_to_print:
+    #         for protein in self.get_cluster_proteins(cluster_num):
+    #             output_file.write(f"{protein}\tcluster_{cluster_num}\n")
+    #     output_file.close()
 
 
 
