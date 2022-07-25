@@ -63,6 +63,7 @@ def print_both_querylists_to_files(qualifying_clusters: list, original_clusters:
     original_clusters.print_querylist_of_clusters_to_file(qualifying_clusters, query_filepath=original_query_filepath)
     new_clusters.print_querylist_of_clusters_to_file(qualifying_clusters, query_filepath=new_query_filepath)
 
+
 def get_initialized_fe(background_filepath: str, terms2features_filepath: str, termlist: pd.DataFrame() = vocabs.getTerms(['GO']), ecut: float = 0.01) -> FUNC_E():
     """TODO"""
     fe = FUNC_E()
