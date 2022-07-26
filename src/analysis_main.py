@@ -60,7 +60,7 @@ def main(args):
 
     print(df2)
 
-    df2.to_csv("../data/testing_data/GO-Label_to_Type.tsv", sep="\t")
+    df2.to_csv("../data/testing_data/GO-Label_to_Type.tsv", columns=["GO-LABEL", "GO-LABEL-TYPE"], sep="\t")
 
     # cluster_dict_filepath = args.cluster_dict
     # network_filepath = args.network
