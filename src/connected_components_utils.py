@@ -135,7 +135,7 @@ def qualifying_proteins_using_submatrix(cluster_num: int, submatrix: SubMatrix, 
 
 
 
-def find_clusters_and_proteins_together(matrix: ProteinMatrix, clusters: AllClusters, degreelist: DegreeList, cluster_ratio: float = .5, cluster_constant: int = 0, protein_ratio: float = .05, protein_constant: int = 2, min_components_that_protein_connects: int = -1, max_degree: int = 500) -> list() and dict():
+def find_clusters_and_proteins_together(matrix: ProteinMatrix, clusters: AllClusters, degreelist: DegreeList, cluster_ratio: float = .5, cluster_constant: int = 0, protein_ratio: float = .05, find_clusters_that_are_MORE_connected: bool = False, protein_constant: int = 2, min_components_that_protein_connects: int = -1, max_degree: int = 500) -> list() and dict():
     """
     function is a version of find_clusters_that_match_criteria, that, once it finds the cluster, finds corresponding proteins at the same time so that the submatrix doesn't need to be reconstructed
 
@@ -161,7 +161,7 @@ def find_clusters_and_proteins_together(matrix: ProteinMatrix, clusters: AllClus
         submatrix = SubMatrix(clusters.get_cluster_proteins(cluster_num), matrix)
         num_components, labels = submatrix.get_num_components_and_labels()
         # print(f"num components is {num_components}. num proteins is {len(submatrix.get_list_of_proteins())}")
-        if num_components < cluster_ratio * len(submatrix.get_list_of_proteins()) + cluster_constant:
+        if (num_components >= (cluster_ratio * len(submatrix.get_list_of_proteins()) + cluster_constant)) != find_clusters_that_are_MORE_connected:
 
             # add cluster to list showing that it qualifies, 
             cluster_nums_that_qualify.append(cluster_num)
