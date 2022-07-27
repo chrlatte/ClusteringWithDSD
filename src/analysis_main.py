@@ -52,28 +52,18 @@ def get_args():
 
 def main(args):
 
-    df = pd.read_csv("../data/go-results/dream_3_go_results.tsv", sep="\t")
-
-    df2 = df[["GO-LABEL", "GO-LABEL-TYPE"]]
-
-    df2.drop_duplicates(subset=["GO-LABEL"], inplace=True)
-
-    print(df2)
-
-    df2.to_csv("../data/testing_data/GO-Label_to_Type.tsv", columns=["GO-LABEL", "GO-LABEL-TYPE"], sep="\t")
-
-    # cluster_dict_filepath = args.cluster_dict
-    # network_filepath = args.network
-    # list_of_proteins_in_cluster_filepath = ""
-    # termlist = vocabs.getTerms(['GO'])
+    cluster_dict_filepath = args.cluster_dict
+    network_filepath = args.network
+    list_of_proteins_in_cluster_filepath = ""
+    termlist = vocabs.getTerms(['GO'])
 
 
-    # matrix, clusters, degreelist = initialize_matrix_clusters_degreelist(network_filepath, cluster_dict_filepath)
+    matrix, clusters, degreelist = initialize_matrix_clusters_degreelist(network_filepath, cluster_dict_filepath)
     
 
-    # genomic_background_filepath = '../data/testing_data/protein_list.txt'
-    # term_mapping_filepath = 'term_mapping.txt'
-    # create_term_mapping_list('../data/go-results/dream_3_go_results.tsv', term_mapping_filepath)
+    genomic_background_filepath = '../data/testing_data/protein_list.txt'
+    term_mapping_filepath = 'term_mapping.txt'
+    create_term_mapping_list('../data/go-results/dream_3_go_results.tsv', term_mapping_filepath)
 
 
 
