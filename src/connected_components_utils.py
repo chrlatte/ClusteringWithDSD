@@ -7,6 +7,7 @@ Date:   June 2022
 Purpose: TODO
 
 """
+from math import sqrt
 
 from matrix_class import ProteinMatrix
 from matrix_class import SubMatrix
@@ -14,6 +15,7 @@ from cluster_class import AllClusters
 from degreelist_class import DegreeList
 
 import numpy as np
+
 
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
  * * * * * * * * * * * * * * * FUNCTIONS * * * * * * * * * * * * * * *
@@ -102,11 +104,17 @@ def find_proteins_that_match_criteria(cluster_num: int, matrix: ProteinMatrix, c
     return qualifying_proteins
 
 
-def qualifying_proteins_using_submatrix(cluster_num: int, submatrix: SubMatrix, clusters: AllClusters, degreelist: DegreeList, ratio: float = .5, constant: int = 0, min_components_that_protein_connects: int = -1, max_degree: int = 500) -> list():
+def qualifying_proteins_using_submatrix(cluster_num: int, submatrix: SubMatrix, clusters: AllClusters, degreelist: DegreeList, ratio: float = .5, constant: int = 0, min_components_that_protein_connects: int = -1, max_degree: int = 500, use_sqrt:bool = False) -> list():
     """
     TODO : a revised version of the find_proteins_that_match_criteria function that takes in a submatrix as a parameter, and therefore doesn't need to construct one. 
+    TODO: will need to check max degree of the protein somewhere (maybe in the find clusters and proteins together function)
     """
     if (min_components_that_protein_connects == -1):
+        if use_sqrt:
+            if ratio == 0: # can use 0 as a value to avoid thinking about the ratio
+                ratio == 1
+            min_components_that_protein_connects = int(constant + ratio * sqrt(len(clusters.get_cluster_proteins(cluster_num))))
+        else:
             min_components_that_protein_connects = constant + ratio * len(clusters.get_cluster_proteins(cluster_num))
         
     num_components, labels = submatrix.get_num_components_and_labels()
@@ -123,19 +131,21 @@ def qualifying_proteins_using_submatrix(cluster_num: int, submatrix: SubMatrix, 
     qualifying_proteins = list()
 
     for protein in (degreelist.get_list_of_proteins_sorted_by_degree()):   
-        num_edges, which_proteins = degreelist.determine_num_edges_to_cluster(protein, clusters.get_cluster_proteins(cluster_num), also_return_which_proteins=True)
-                
-        if (num_edges >= min_components_that_protein_connects):
-            set_of_components_that_protein_connects = degreelist.which_components_of_a_cluster_would_a_protein_connect(protein, clusters.get_cluster_proteins(cluster_num), component_dictionary, connected_proteins_within_cluster=which_proteins)
 
-            if len(set_of_components_that_protein_connects) >= min_components_that_protein_connects:
-                qualifying_proteins.append(protein)
+        if (degreelist.get_degree_of_protein(protein, max_degree=max_degree) <= max_degree):
+            num_edges, which_proteins = degreelist.determine_num_edges_to_cluster(protein, clusters.get_cluster_proteins(cluster_num), also_return_which_proteins=True)
+                    
+            if (num_edges >= min_components_that_protein_connects):
+                set_of_components_that_protein_connects = degreelist.which_components_of_a_cluster_would_a_protein_connect(protein, clusters.get_cluster_proteins(cluster_num), component_dictionary, connected_proteins_within_cluster=which_proteins)
+
+                if len(set_of_components_that_protein_connects) >= min_components_that_protein_connects:
+                    qualifying_proteins.append(protein)
 
     return qualifying_proteins
 
 
 
-def find_clusters_and_proteins_together(matrix: ProteinMatrix, clusters: AllClusters, degreelist: DegreeList, cluster_ratio: float = .5, cluster_constant: int = 0, protein_ratio: float = .05, find_clusters_that_are_MORE_connected: bool = False, protein_constant: int = 2, min_components_that_protein_connects: int = -1, max_degree: int = 500) -> list() and dict():
+def find_clusters_and_proteins_together(matrix: ProteinMatrix, clusters: AllClusters, degreelist: DegreeList, cluster_ratio: float = .5, cluster_constant: int = 0, protein_ratio: float = .05, protein_constant: int = 2, min_components_that_protein_connects: int = -1, max_degree: int = 500, use_sqrt:bool = False, find_clusters_that_are_MORE_connected: bool = False) -> list() and dict():
     """
     function is a version of find_clusters_that_match_criteria, that, once it finds the cluster, finds corresponding proteins at the same time so that the submatrix doesn't need to be reconstructed
 
@@ -167,7 +177,7 @@ def find_clusters_and_proteins_together(matrix: ProteinMatrix, clusters: AllClus
             cluster_nums_that_qualify.append(cluster_num)
 
             # then do analysis on the cluster -> create a list of qualifying proteins
-            qualifying_proteins = qualifying_proteins_using_submatrix(cluster_num, submatrix, clusters, degreelist, ratio=protein_ratio, constant=protein_constant, min_components_that_protein_connects=min_components_that_protein_connects, max_degree=max_degree)
+            qualifying_proteins = qualifying_proteins_using_submatrix(cluster_num, submatrix, clusters, degreelist, ratio=protein_ratio, constant=protein_constant, max_degree=max_degree, min_components_that_protein_connects=min_components_that_protein_connects, use_sqrt=use_sqrt)
 
             if qualifying_proteins: # not empty
                 qualifying_proteins_dict[cluster_num] = qualifying_proteins
