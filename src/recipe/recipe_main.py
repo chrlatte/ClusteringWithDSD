@@ -9,6 +9,8 @@ Purpose: a main TODO
 """
 import numpy as np
 import pandas as pd
+import warnings
+warnings.simplefilter(action='ignore', category=FutureWarning)
 import argparse
 
 from classes.matrix_class import ProteinMatrix
