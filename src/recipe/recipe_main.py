@@ -23,7 +23,6 @@ import func_e.vocabs.all as vocabs
 
 from recipe_utils import initialize_matrix_clusters_degreelist
 from recipe_utils import find_clusters_and_proteins_together
-# from recipe_utils import pick_ratio
 from recipe_utils import print_querylist_of_clusters_to_file
 from recipe_utils import get_initialized_fe
 from recipe_utils import print_protein_background_to_file
@@ -84,7 +83,7 @@ def main(args):
     print(f"finding qualifying clusters and proteins")
     ## TODO: make fxn parameters inputs from command line
     # find qualifying clusters and proteins
-    qualifying_clusters, qualifying_proteins = find_clusters_and_proteins_together(matrix, clusters, degreelist, cluster_ratio=0, cluster_constant=5, protein_ratio=1, protein_constant=0, use_sqrt=True)
+    qualifying_clusters, qualifying_proteins = find_clusters_and_proteins_together(matrix, clusters, degreelist, cluster_ratio=0, cluster_constant=0, protein_ratio=1, protein_constant=0, use_sqrt=True)
 
 
     # TODO: can have an if conditional: if want to print all results use clusters.get_all_cluster_labels or qualifying_clusters, if want only targeted clusters use qualifying_proteins.keys()
@@ -101,6 +100,9 @@ def main(args):
         print_protein_background_to_file(matrix, filename="data/background_proteinlist.txt")
         protein_list_filepath = "data/background_proteinlist.txt"
     
+
+
+
     print(f"doing functional enrichment")
     original_fe = get_initialized_fe(protein_list_filepath, term_mapping_filepath, termlist = termlist)
     original_fe.importFiles({ 'query': original_querylist_filepath })
@@ -111,7 +113,11 @@ def main(args):
     updated_fe.run(cluster=False)
 
 
-    print(f"assembling data")
+
+
+
+    print(f"assembling data") 
+    # TODO: make a function that creates the dataframes
     # original:
     original_df = original_fe.enrichment[['Module', 'Term', 'Fishers_pvalue']].copy()
     original_df['Module'] = original_df['Module'] + ' ' + original_df['Term']
@@ -124,9 +130,16 @@ def main(args):
     updated_df.drop('Term', axis=1, inplace=True)
     updated_df.rename(columns = {'Fishers_pvalue':'Updated_Fishers_pvalue'}, inplace = True)
 
+
+
+
     # combine into a single df:
     results_df = pd.merge(original_df, updated_df, on=['Module'], how='outer')
     results_df.plot(x="Module", y=["Fishers_pvalue", "Updated_Fishers_pvalue"], kind="bar")
+
+
+
+
 
     print(f"number of significant pvals in original clusters: {results_df['Fishers_pvalue'].count()}")
     print(f"number of significant pvals in updated clusters: {results_df['Updated_Fishers_pvalue'].count()}\n")
