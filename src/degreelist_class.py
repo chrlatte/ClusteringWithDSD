@@ -11,8 +11,8 @@ Purpose: a class TODO
 import pandas as pd 
 import numpy as np
 
-from matrix_class import *
-from cluster_class import *
+from matrix_class import ProteinMatrix
+
 
 
 
@@ -134,7 +134,7 @@ class DegreeList:
                 i += 1
         else: # max_edges_until_return has been specified
             for cluster_protein in cluster_list:
-                # print(f"about to call has edge 1")
+
                 if (self.protein_matrix).has_edge(protein, cluster_protein):
                     num_edges += 1
                 if num_edges >= max_edges_until_return:
@@ -150,7 +150,7 @@ class DegreeList:
         
 
 
-    def create_list_of_proteins_connected_to_cluster(self, list_of_proteins: np.array, cluster_list: np.array, max_list_length: int = -1, min_num_connections: int = 3) -> list:
+    def create_list_of_proteins_connected_to_cluster(self, cluster_list: list(), max_list_length: int = -1, min_num_connections: int = 1) -> list:
         """             
         Parameters: cluster_list is a list of proteins in a cluster
                     max_list_length is an upper bound for the number of proteins to return in a list. If None, all proteins with at least min_num_connections connections are added to the list
@@ -158,7 +158,7 @@ class DegreeList:
         Purpose:    to create a list of proteins that are connected to the cluster
         Returns:    a list of proteins that are connected to the cluster
         """
-        
+        list_of_proteins = self.protein_matrix.get_list_of_proteins()
         qualifying_proteins = []
 
         if max_list_length == -1: # max_list_length left unspecified
@@ -232,4 +232,11 @@ class DegreeList:
         return False
 
 
-
+    def get_degree_of_protein(self, protein: str, max_degree: int = 501):
+        """ TODO """
+        try:
+            return dict(self.sorted_protein_degree_dict)[protein]
+        except:
+            print(f"{protein} not in degreelist dictionary")
+            return (max_degree + 1)
+            
