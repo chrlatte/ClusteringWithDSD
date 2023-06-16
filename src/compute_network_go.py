@@ -1,4 +1,4 @@
-#!/cluster/tufts/cowenlab/.envs/denoise/bin/python
+#!/usr/bin/python3
 import sys
 import os
 
@@ -110,17 +110,10 @@ def get_go_labels(filter_protein,
     return f_labels, labels_dict
 ################### GOATOOLS CODE #####################################
 
-def convert_to_entrez(genes, entrezfile = "entrezfile.tmp.json"):
+def convert_to_entrez(genes):
     """
     Convert to entrez
     """
-    if os.path.exists(entrezfile):
-        with open(entrezfile, "r") as ef:
-            emap = json.load(ef)
-            entrez = [int(ent) for ent in emap.keys()]
-            return entrez, emap
-
-    
     mg     = mygene.MyGeneInfo()
 
     # compute batch of fifty
@@ -147,9 +140,6 @@ def convert_to_entrez(genes, entrezfile = "entrezfile.tmp.json"):
             op["entrezgene"]: op["_id"]
             for op in output if "entrezgene" in op
         }
-    
-    with open(entrezfile, "w") as of:
-        json.dump(emap, of)
     
     return entrezlist, emap
 
@@ -181,6 +171,9 @@ def get_args():
     parser = argparse.ArgumentParser()
     parser.add_argument("--network", required = True)
     parser.add_argument("--output", required = True)
+    parser.add_argument("--min-go-level", default = 5, type = int, help = "threshold for the level of the GO-terms in the BP, MF and CC hierarchies")
+    parser.add_argument("--min-prot", default = 10, type = int, help = "specifies the minimum threshold on how many proteins a   single GO-term annotates")
+
     return parser.parse_args()
 
 def main(args):
@@ -195,18 +188,18 @@ def main(args):
     eprots, emap = convert_to_entrez(genelist)
 
     mf_labels, go_mf = get_go_lab("F",
-                                  5,
-                                  10,
+                                  args.min_go_level,
+                                  args.min_prot,
                                   entrez_proteins = eprots)
 
     bp_labels, go_bp = get_go_lab("P",
-                                  5,
-                                  10,
+                                  args.min_go_level,
+                                  args.min_prot,
                                   entrez_proteins = eprots)
 
     cc_labels, go_cc = get_go_lab("C",
-                                  5,
-                                  10,
+                                  args.min_go_level,
+                                  args.min_prot,
                                   entrez_proteins = eprots)
 
     gomaps = []

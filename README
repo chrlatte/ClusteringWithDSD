@@ -1,0 +1,81 @@
+Last edited: 16/06/2023
+
+
+Subdirectories & Bash Scripts:
+------------------------------
+
++-----------+------------------------------------------------------------------+
+| Directory | Description                                                      |
++-----------+------------------------------------------------------------------+
+| ./src     | contains all source code for creating clusters using DSD and     |
+|           | spectral clustering, as well as generating go labels based on a  |
+|           | PPI network                                                      |
++-----------+-----------------+------------------------------------------------+
+| ./data    | ./data/go/go    | files needed to generate GO labels             |
+|           +-----------------+----------------------------------------------- +
+|           | ./data/networks | DREAM PPI networks for DREAM 1 - 6             |
++-----------+-----------------+------------------------------------------------+
+| *.sh      | contains scripts bash scripts to be used with sbatch             |
++-----------+------------------------------------------------------------------+
+
+
+Requirements:
+-------------
+
+All requirement found in `requirements.txt`. To install, use commad:
+   >> pip install -r requirements.txt
+  
+
+Python Scripts & Usage:
+-----------------------
+
+1. Creating clusters based on a PPI network
+
+   The syntax is:
+
+      ./clustering_main.py --network  network_file \
+                           --output   output_files_prefix \
+                           --min-c    minimum_cluster_size \
+                           --max-c    maximum_cluster_size \
+                           --seed     random_seed \
+                           --spectral spectral_clustering_parameter \
+                           --simple-inverse use_simple_inverse_flag
+
+   where:
+
+    --network : path to PPI network to cluster
+    --output  : desired path and file name prefix for output files
+    --min-c   : [optional] integer specifying minimum cluster size; defaulted to 3
+    --max-c   : [optional] integer specifying maximum cluster size; defaulted to 100
+    --seed    : [optional] integer specifying random seed for spectral clustering; defaulted to 68
+    --spectral: [optional] integer specifying the intial spectral clustering parameter, before
+                recusively splitting the clusters into two; defaulted to 50
+    --simple-inverse: [optional] any non-zero integer flag indicating the algorithm uses simple
+                inverse to compute the similarity matrix instead of using an RBF kernal; defaulted to False
+
+
+   The final clusters will be stores in `{output}-cluster1.json`
+
+   N.B. Simple inverse is useful when RBF produces a matrix with enough values sufficiently close
+   to 0. In which case, there is an exponential time blow up with RBF and simple inverse significantly
+   speeds up spectral clustering computations.
+
+2. Generating GO annotations based on a PPI network
+
+   The syntax is:
+
+      ./compute_network_go.py --network      network_file \
+                              --output       output_files_prefix \
+                              --min-go-level minimum_go_level \
+                              --min-prot     minimum_proteins_annotated
+
+   where:
+
+    --network     : path to PPI network to cluster
+    --output      : desides path and file name for GO annotation list
+    --min-prot    : [optional] minimum number of protein a single GO term annotatesl defaulted to 10
+    --min-go-level: [optional] threshold for level of GO terms in BP, MF and CC hierarchies; defaulted to 5
+
+   N.B. This script expects the --network parameter to be a PPI network where each line in the file
+   takes the form `protein1 protein2 interactionScore`. To modify the script to suit a different file
+   format, update line 183-187 in the python file.
