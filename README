@@ -62,7 +62,9 @@ Python Scripts & Usage:
 
 2. Generating GO annotations based on a PPI network
 
-   The syntax is:
+   Before generating annotations, unzip the tarball using the command `tar -xzvf go.tar.gz`
+
+   The syntax for computing GO annotations is:
 
       ./compute_network_go.py --network      network_file \
                               --output       output_files_prefix \
