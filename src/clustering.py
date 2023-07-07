@@ -5,11 +5,12 @@ import os
 from tqdm import tqdm
 sys.path.append(os.getcwd())
 
-def recursive_clustering(A, clusters, lower, higher):
+def recursive_clustering(A, clusters, lower, higher, seed):
     indices_to_cluster = [list(range(A.shape[0]))]
     labels             = {}
     label_count        = 0
     pbar               = tqdm(total = A.shape[0])
+    is_first_round     = True
     while(True):
         
         # Break condition
@@ -19,7 +20,7 @@ def recursive_clustering(A, clusters, lower, higher):
         ids   = indices_to_cluster.pop()
         Aid   = A[np.ix_(ids, ids)] 
         idmap = {i:k for i, k in enumerate(ids)}
-        c_ss  = SpectralClustering(n_clusters = clusters, affinity="precomputed").fit(Aid)
+        c_ss  = SpectralClustering(n_clusters = clusters, affinity="precomputed", random_state=seed).fit(Aid)
         
         # labels - id mapping
         gen_labels = {}
@@ -36,5 +37,8 @@ def recursive_clustering(A, clusters, lower, higher):
                 pbar.update(len(gen_labels[l]))
                 labels[label_count] = [k for k in gen_labels[l]]
                 label_count        += 1
+        if (is_first_round):
+            is_first_round = False
+            clusters = 2
     pbar.close()
     return labels

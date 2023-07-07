@@ -46,7 +46,7 @@ def main(args):
 			nodemap = json.load(of)
 
 	else:	
-		df = pd.read_csv(network, sep = " ", header = None)
+		df = pd.read_csv(network, sep = "\s+", header = None)
 		nodes = set(list(df[0]) + list(df[1]))
 
 		# get nodemap
